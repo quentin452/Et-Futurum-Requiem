@@ -36,7 +36,7 @@ apply plugin: 'forge'
 group = "ganymedes01.etfuturum"
 archivesBaseName = "Et_Futurum_Requiem"
 def modVersion = "2.3.1"
-version = getCommitVersion(modVersion)
+version = project.hasProperty("useCommitHashInVersion") ? getCommitVersion(modVersion) : modVersion
 
 def getCommitVersion(modVersion){
 	try {
@@ -102,6 +102,10 @@ dependencies {
 	compile "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
     compileOnly "team.chisel:Chisel:2.9.5.12:deobf"
     compileOnly "team.chisel.ctmlib:CTMLib:MC1.7.10-1.4.1.5:deobf"
+    
+	shade('com.github.makamys:MCLib:22cd459') {
+		exclude group: "codechicken"
+	}
 }
 
 minecraft {
@@ -133,13 +137,6 @@ jar {
 	}
 }
 
-task sourceJar(type: Jar) {
-	manifest {}
-	classifier = 'sources'
-	from sourceSets.main.allSource
-	exclude 'assets/**'
-}
-
 // TODO might want to embed Mixin in this JAR too, unless this would cause issues?
 task devJar(type: Jar) {
 	manifest {
@@ -152,7 +149,7 @@ task devJar(type: Jar) {
 }
 
 artifacts {
-	archives sourceJar, devJar
+	archives devJar
 }
 
 
@@ -206,9 +203,6 @@ dependencies {
         exclude module: 'commons-io'
         exclude module: 'log4j-core'
     }
-	shade('com.github.makamys:MCLib:22cd459') {
-		exclude group: "codechicken"
-	}
 }
 
 def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + refMapForYourConfig
