@@ -35,7 +35,7 @@ apply plugin: 'forge'
 // SEMVER that gradle uses.
 group = "ganymedes01.etfuturum"
 archivesBaseName = "Et_Futurum_Requiem"
-def modVersion = "2.3.1"
+def modVersion = "2.3.2"
 version = project.hasProperty("useCommitHashInVersion") ? getCommitVersion(modVersion) : modVersion
 
 def getCommitVersion(modVersion){
@@ -103,7 +103,7 @@ dependencies {
     compileOnly "team.chisel:Chisel:2.9.5.12:deobf"
     compileOnly "team.chisel.ctmlib:CTMLib:MC1.7.10-1.4.1.5:deobf"
     
-	shade('com.github.makamys:MCLib:22cd459') {
+	shade('com.github.makamys:MCLib:0.3.1') {
 		exclude group: "codechicken"
 	}
 }
