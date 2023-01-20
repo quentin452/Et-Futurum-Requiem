@@ -13,6 +13,7 @@ import ganymedes01.etfuturum.core.utils.Utils;
 import ganymedes01.etfuturum.items.IRegistryName;
 import ganymedes01.etfuturum.items.block.ItemDyedBed;
 import ganymedes01.etfuturum.lib.Reference;
+import ganymedes01.etfuturum.recipes.ModRecipes;
 import net.minecraft.block.BlockBed;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,12 +33,11 @@ public class BlockDyedBed extends BlockBed implements IConfigurable, ISubBlocksB
 			dye = 15;
 		}
 		setHardness(0.2F);
-		String dyeName = dye_names[dye];
+		String dyeName = ModRecipes.dye_names[dye];
 		setBlockName(Utils.getUnlocalisedName(dyeName + "_bed"));
 		disableStats();
 		setBlockTextureName(dyeName + "_bed");
 		setCreativeTab(isEnabled() ? EtFuturum.creativeTabBlocks : null);
-		System.out.println("etfuturum:" + dyeName + "_bed");
 	}
 	
 //	@SideOnly(Side.CLIENT)
