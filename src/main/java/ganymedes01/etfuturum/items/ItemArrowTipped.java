@@ -196,7 +196,7 @@ public class ItemArrowTipped extends Item implements IConfigurable {
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
         
-		String s = "item.etfuturum.tipped_arrow.";
+		String s = "item.etfuturum.tipped_arrow";
 
 		List list = getEffects(stack);
 		String s1;
@@ -205,15 +205,14 @@ public class ItemArrowTipped extends Item implements IConfigurable {
 		{
 			if(stack.getItemDamage() > 0 || (stack.hasTagCompound() && stack.getTagCompound().hasKey("Potion", 10))) {
 			    s1 = ((PotionEffect)list.get(0)).getEffectName();
-			    return s + s1;
+			    return s + "." + s1;
 			}
 		} else if (stack.getItemDamage() == 0)
         {
-            return StatCollector.translateToLocal("item.etfuturum.tipped_arrow.effect.empty").trim();
+            return "item.etfuturum.tipped_arrow.effect.empty";
         }
 		
-		s1 = PotionHelper.func_77905_c(stack.getItemDamage());
-		return StatCollector.translateToLocal(s1).trim() + " " + super.getItemStackDisplayName(stack);
+		return s;
 		
 
 //		PotionEffect effect = getEffect(stack);
