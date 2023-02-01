@@ -20,7 +20,6 @@ import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.ForgeHooks;
 /**
  * Adapted from Jabelar's tutorials
  * Taken from VillageNames with permission
@@ -152,38 +151,40 @@ public class VersionChecker extends Thread
         {
         	// Ordinary version checker
         	if (
-            		!instance.isLatestVersion()
-            		&& !latestVersion.equals(null)
+            		!latestVersion.equals(null)
             		&& !latestVersion.equals("")
         			)
         	{
                 quitChecking=true;
-
-                String text = String.format(StatCollector.translateToLocal("gui.chat.update"), 
-                		EnumChatFormatting.AQUA.toString()+EnumChatFormatting.ITALIC.toString()+Reference.MOD_NAME+EnumChatFormatting.RESET.toString(), 
-                		EnumChatFormatting.YELLOW.toString()+latestVersion+EnumChatFormatting.RESET.toString());
-                event.player.addChatComponentMessage(new ChatComponentText(text));
                 
-                ChatComponentText updateLinks = new ChatComponentText("");
-                
-                for(int i = 0; i < downloadURLs.size(); i++) {
-                	String url = downloadURLs.get(i);
-                	Logger.debug(event);
-                	ChatComponentText urlComponent = new ChatComponentText("[" + url.split("\\|")[0] + "]");
-                	urlComponent.getChatStyle().setColor(EnumChatFormatting.getValueByName(url.split("\\|")[1]));
-                	urlComponent.getChatStyle().setBold(true);
-                	urlComponent.getChatStyle().setChatClickEvent(new ClickEvent(Action.OPEN_URL, url.split("\\|")[2]));
-                	
-                	ChatComponentText hoverComponent = new ChatComponentText(String.format(StatCollector.translateToLocal("gui.chat.update.download"), url.split("\\|")[0]));
-                	hoverComponent.getChatStyle().setColor(urlComponent.getChatStyle().getColor());
-                	urlComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComponent));
-                	
-                	updateLinks.appendSibling(urlComponent);
-                	if(downloadURLs.size() > i) { //Don't add a space if it's the last URL
-                    	updateLinks.appendText(" ");
-                	}
+                if(!instance.isLatestVersion()) {
+	
+	                String text = String.format(StatCollector.translateToLocal("gui.chat.update"), 
+	                		EnumChatFormatting.AQUA.toString()+EnumChatFormatting.ITALIC.toString()+Reference.MOD_NAME+EnumChatFormatting.RESET.toString(), 
+	                		EnumChatFormatting.YELLOW.toString()+latestVersion+EnumChatFormatting.RESET.toString());
+	                event.player.addChatComponentMessage(new ChatComponentText(text));
+	                
+	                ChatComponentText updateLinks = new ChatComponentText("");
+	                
+	                for(int i = 0; i < downloadURLs.size(); i++) {
+	                	String url = downloadURLs.get(i);
+	                	Logger.debug(event);
+	                	ChatComponentText urlComponent = new ChatComponentText("[" + url.split("\\|")[0] + "]");
+	                	urlComponent.getChatStyle().setColor(EnumChatFormatting.getValueByName(url.split("\\|")[1]));
+	                	urlComponent.getChatStyle().setBold(true);
+	                	urlComponent.getChatStyle().setChatClickEvent(new ClickEvent(Action.OPEN_URL, url.split("\\|")[2]));
+	                	
+	                	ChatComponentText hoverComponent = new ChatComponentText(String.format(StatCollector.translateToLocal("gui.chat.update.download"), url.split("\\|")[0]));
+	                	hoverComponent.getChatStyle().setColor(urlComponent.getChatStyle().getColor());
+	                	urlComponent.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComponent));
+	                	
+	                	updateLinks.appendSibling(urlComponent);
+	                	if(downloadURLs.size() > i) { //Don't add a space if it's the last URL
+	                    	updateLinks.appendText(" ");
+	                	}
+	                }
+					event.player.addChatComponentMessage(updateLinks);
                 }
-				event.player.addChatComponentMessage(updateLinks);
         	}
         }
         
