@@ -388,13 +388,16 @@ public class ModRecipes {
 		}
 
 		if (ConfigBlocksItems.enableDoors) {
+			int output = ConfigBlocksItems.enableDoorRecipeBuffs ? 3 : 1;
 			for (int i = 0; i < ModBlocks.doors.length; i++) {
-				addShapedRecipe(new ItemStack(ModBlocks.doors[i], 3), "xx", "xx", "xx", 'x', new ItemStack(Blocks.planks, 1, i + 1));
+				addShapedRecipe(new ItemStack(ModBlocks.doors[i], output), "xx", "xx", "xx", 'x', new ItemStack(Blocks.planks, 1, i + 1));
 			}
+			if (ConfigBlocksItems.enableDoorRecipeBuffs) {
 			removeFirstRecipeFor(Items.wooden_door);
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.wooden_door, 3), "xx", "xx", "xx", 'x', "plankWood"));
 			removeFirstRecipeFor(Items.iron_door);
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.iron_door, 3), "xx", "xx", "xx", 'x', "ingotIron"));
+			}
 		}
 		
 		if(ConfigBlocksItems.enableTrapdoors) {

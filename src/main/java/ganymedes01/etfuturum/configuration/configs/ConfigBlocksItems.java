@@ -37,6 +37,7 @@ public class ConfigBlocksItems extends ConfigBase {
 	public static boolean enableSponge;
 	public static boolean enablePrismarine;
 	public static boolean enableDoors;
+	public static boolean enableDoorRecipeBuffs;
 	public static boolean enableTrapdoors;
 	public static boolean enableInvertedDaylightSensor;
 	public static boolean enableOldBaseDaylightSensor;
@@ -183,6 +184,7 @@ public class ConfigBlocksItems extends ConfigBase {
 		enableIronTrapdoor = cfg.getBoolean("enableIronTrapdoor", catBlockFunc, true, "");
 		enableSponge = cfg.getBoolean("enableSponge", catBlockFunc, true, "");
 		enableDoors = cfg.getBoolean("enableDoors", catBlockFunc, true, "Enables wood variant doors");
+		enableDoorRecipeBuffs = cfg.getBoolean("enableDoorRecipeBuffs", catBlockFunc, true, "Backports recipe buffs to doors (from 1 to 3)");
 		enableTrapdoors = cfg.getBoolean("enableTrapdoors", catBlockFunc, true, "Enables wood variant trapdoors");
 		enableSlimeBlock = cfg.getBoolean("enableSlimeBlock", catBlockFunc, true, "Just bouncy, does not pull blocks.");
 		enableWoodRedstone = cfg.getBoolean("enableWoodRedstone", catBlockFunc, true, "Enables wood variant buttons and pressure plates");
