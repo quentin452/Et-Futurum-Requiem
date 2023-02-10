@@ -38,7 +38,7 @@ apply plugin: 'forge'
 // SEMVER that gradle uses.
 group = "ganymedes01.etfuturum"
 archivesBaseName = "Et_Futurum_Requiem"
-def modVersion = "2.4.2"
+def modVersion = "2.4.3"
 def embedMixin = !project.hasProperty("nomixin");
 version = project.hasProperty("useCommitHashInVersion") ? getCommitVersion(modVersion) : modVersion
 
