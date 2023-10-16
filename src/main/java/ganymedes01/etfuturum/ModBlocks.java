@@ -8,6 +8,7 @@ import ganymedes01.etfuturum.blocks.ores.BlockDeepslateOre;
 import ganymedes01.etfuturum.blocks.ores.BlockDeepslateRedstoneOre;
 import ganymedes01.etfuturum.blocks.ores.BlockOreNetherGold;
 import ganymedes01.etfuturum.client.sound.ModSounds;
+import ganymedes01.etfuturum.compat.CompatAE2;
 import ganymedes01.etfuturum.configuration.configs.*;
 import ganymedes01.etfuturum.tileentities.TileEntityWoodSign;
 import net.minecraft.block.Block;
@@ -447,7 +448,12 @@ public enum ModBlocks {
 	NETHERITE_STAIRS(ConfigBlocksItems.enableNetherite, new BlockNetheriteStairs(), ItemBlockUninflammable.class),
 	END_GATEWAY(EtFuturum.TESTING, new BlockEndGateway()),
 	LIGHT(ConfigBlocksItems.enableLightBlock, new BlockLight()),
-	BARRIER(ConfigBlocksItems.enableBarrier, new BlockBarrier());
+	BARRIER(ConfigBlocksItems.enableBarrier, new BlockBarrier()),
+
+	//Mod compat
+	DEEPSLATE_CERTUS_QUARTZ_ORE(ConfigBlocksItems.enableDeepslateOres, CompatAE2.createDeepslateCertusQuartzOre(false)),
+	DEEPSLATE_CHARGED_CERTUS_QUARTZ_ORE(ConfigBlocksItems.enableDeepslateOres, CompatAE2.createDeepslateCertusQuartzOre(true)),
+	;
 
 	public static final ModBlocks[] DOORS = new ModBlocks[]{DOOR_SPRUCE, DOOR_BIRCH, DOOR_JUNGLE, DOOR_ACACIA, DOOR_DARK_OAK, CRIMSON_DOOR, WARPED_DOOR, MANGROVE_DOOR, CHERRY_DOOR, BAMBOO_DOOR};
 	public static final ModBlocks[] FENCE_GATES = new ModBlocks[]{FENCE_GATE_SPRUCE, FENCE_GATE_BIRCH, FENCE_GATE_JUNGLE, FENCE_GATE_ACACIA, FENCE_GATE_DARK_OAK, CRIMSON_FENCE_GATE, WARPED_FENCE_GATE, MANGROVE_FENCE_GATE, CHERRY_FENCE_GATE, BAMBOO_FENCE_GATE};
@@ -548,7 +554,7 @@ public enum ModBlocks {
 	}
 
 	public boolean isEnabled() {
-		return isEnabled;
+		return isEnabled && theBlock != null;
 	}
 
 	public ItemStack newItemStack() {

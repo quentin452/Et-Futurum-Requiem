@@ -201,6 +201,7 @@ public class EtFuturum {
 	public static final boolean hasDragonBlockC = Loader.isModLoaded("jinryuudragonblockc");
 	public static final boolean hasBiomesOPlenty = Loader.isModLoaded("BiomesOPlenty");
 	public static final boolean hasExtraUtils = Loader.isModLoaded("ExtraUtilities");
+	public static final boolean hasAE2 = Loader.isModLoaded("appliedenergistics2");
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
