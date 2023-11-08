@@ -1768,3 +1768,16 @@ efr.nei.amount=数量
 efr.nei.weight=重量
 
 efr.decoration.only=仅装饰
+
+efr.warn.prerelease.version=§c§l[Debug]: §r您正在使用预发布版本的§bEt §bFuturum §bRequiem§r。这个版本可能不稳定，点击这里去GitHub报告错误。
+efr.log.prerelease.version=警告:Et Futurum Requiem的预发布版本正在使用中!这个版本可能不稳定，预计会有比平时更多的bug。
+efr.warn.prerelease.version.bugs=请务必在https://github.com/Roadhog360/Et-Futurum-Requiem/issues上报告bug
+efr.critical.badbetterfpsalgorithm1=§4§1[CRITICAL]:§bBetterFPS§配置了一个糟糕的数学算法。
+efr.critical.badbetterfpsalgorithm2=不应该使用“rivens-half”或“taylors”来对你的世界造成损害。强烈建议您进入其配置并将“算法”更改为其他内容，最好是“vanilla”。
+efr.critical.badbetterfpsalgorithm3=之所以向您展示这一点，是因为前面提到的数学算法有缺陷，会生成不正确的数字，从而可能节省成本。
+efr.elytra.flight.disabled=为了您的安全，鞘翅飞行已被禁用。
+efr.elytra.betterfps.warn1=§cBetterFPS配置不佳。
+efr.elytra.betterfps.warn2=§c查看聊天警告以获取更多信息。
+efr.elytra.betterfps.warn3=§c鞘翅飞行被禁用。
+
+
