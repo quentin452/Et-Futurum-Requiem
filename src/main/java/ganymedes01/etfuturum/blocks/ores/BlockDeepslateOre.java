@@ -25,12 +25,12 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Random;
 
-public class BlockDeepslateOre extends BlockOre {
+public class BlockDeepslateOre extends Block {
 
 	public Block base;
 
 	public BlockDeepslateOre(Block block, boolean defaultMapping) {
-		super();
+		super(block.getMaterial());
 		setAttribs(this, block);
 		base = block;
 		if (getClass().getName().startsWith("ganymedes01.etfuturum")) { //We only want to do this on my own stuff, not mods that extend it.
@@ -77,7 +77,9 @@ public class BlockDeepslateOre extends BlockOre {
 	public int quantityDroppedWithBonus(int i, Random p_149745_1_) {
 		return base.quantityDroppedWithBonus(i, p_149745_1_);
 	}
-
+	public void dropBlockAsItemWithChance(World p_149690_1_, int p_149690_2_, int p_149690_3_, int p_149690_4_, int p_149690_5_, float p_149690_6_, int p_149690_7_) {
+		super.dropBlockAsItemWithChance(p_149690_1_, p_149690_2_, p_149690_3_, p_149690_4_, p_149690_5_, p_149690_6_, p_149690_7_);
+	}
 	@Override
 	public int getExpDrop(IBlockAccess p_149690_1_, int p_149690_5_, int p_149690_7_) {
 		return base.getExpDrop(p_149690_1_, p_149690_5_, p_149690_7_);
