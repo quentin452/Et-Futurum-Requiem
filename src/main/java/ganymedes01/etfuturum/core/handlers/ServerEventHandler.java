@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -97,6 +98,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.mutable.MutableFloat;
+import org.spongepowered.asm.mixin.injection.callback.Cancellable;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -1333,23 +1335,7 @@ public class ServerEventHandler {
 			}
 		}
 	}
-
-	@SubscribeEvent
-	public void spawnEvent(LivingSpawnEvent.CheckSpawn event) {
-		if (event.world.provider instanceof WorldProviderHell) {
-			int x = MathHelper.floor_double(event.x);
-			int y = MathHelper.floor_double(event.y);
-			int z = MathHelper.floor_double(event.z);
-			World world = event.world;
-
-			if (world.getBlock(x, y - 1, z) == ModBlocks.NETHER_WART.get() && world.getBlockMetadata(x, y - 1, z) == 0) {
-				if (!(event.entity instanceof EntityFlying)) {
-					event.setResult(Result.DENY);
-				}
-			}
-		}
-	}
-
+	
 	@SubscribeEvent
 	public void spawnEvent(EntityJoinWorldEvent event) {
 		int x = MathHelper.floor_double(event.entity.posX);
