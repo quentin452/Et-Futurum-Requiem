@@ -251,7 +251,7 @@ public class ServerEventHandler {
 		} else if (ConfigSounds.leashSounds && event.entity instanceof EntityLeashKnot) {
 			sound = "leash_knot";
 		}
-		if (!sound.equals("")) {
+		if (!sound.isEmpty()) {
 			event.world.playSoundAtEntity(event.entity, Reference.MCAssetVer + ":entity." + sound + ".place", 1.0F, 1.0F);
 			return;
 		}
@@ -1845,18 +1845,24 @@ public class ServerEventHandler {
 			WorldServer ws = (WorldServer) e.world;
 			for (EntityTrackerEntry ete : (Set<EntityTrackerEntry>) ws.getEntityTracker().trackedEntities) {
 				if (ete != null && ete.myEntity instanceof IElytraPlayer) {
-					IElytraPlayer elb = (IElytraPlayer) ete.myEntity;
-					boolean flying = elb.etfu$isElytraFlying();
-					if (!flying && ((IElytraEntityTrackerEntry) ete).etfu$getWasSendingVelUpdates()) {
-						ete.sendVelocityUpdates = false;
-					} else if (flying) {
-						if (!ete.sendVelocityUpdates) {
-							((IElytraEntityTrackerEntry) ete).etfu$setWasSendingVelUpdates(true);
-						}
-						ete.sendVelocityUpdates = true;
-					}
+					handleElytraPlayer(ete, e);
 				}
 			}
+		}
+	}
+
+	private void handleElytraPlayer(EntityTrackerEntry ete, TickEvent.WorldTickEvent e) {
+		IElytraPlayer elb = (IElytraPlayer) ete.myEntity;
+		boolean flying = elb.etfu$isElytraFlying();
+		boolean wasSendingVelUpdates = ((IElytraEntityTrackerEntry) ete).etfu$getWasSendingVelUpdates();
+
+		if (!flying && wasSendingVelUpdates) {
+			ete.sendVelocityUpdates = false;
+		} else if (flying) {
+			if (!ete.sendVelocityUpdates) {
+				((IElytraEntityTrackerEntry) ete).etfu$setWasSendingVelUpdates(true);
+			}
+			ete.sendVelocityUpdates = true;
 		}
 
 		if (ConfigMixins.enableDoWeatherCycle && e.phase == TickEvent.Phase.END && e.side == Side.SERVER) {
