@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.chunk.Chunk;
 
 import java.io.*;
 import java.util.*;
@@ -54,69 +55,131 @@ public class OceanMonument {
 		if (world.isRemote)
 			return;
 
+		int chunkX = x / 16;
+		int chunkZ = z / 16;
+
+		if (!world.getChunkProvider().chunkExists(chunkX, chunkZ))
+			return;
+
 		for (Entry<WorldCoord, Integer> entry : OceanMonument.getMap().entrySet()) {
 			WorldCoord pos = entry.getKey();
 			int value = entry.getValue();
 
-			Block block = null;
-			int meta = 0;
-			switch (value) {
-				case 0:
-				case 1:
-				case 2:
-					block = ModBlocks.PRISMARINE_BLOCK.get();
-					meta = value;
-					break;
-				case 3:
-					block = ModBlocks.SEA_LANTERN.get();
-					break;
-				case 4:
-					block = Blocks.gold_block;
-					break;
-				case 5:
-					block = ConfigBlocksItems.enableSponge ? ModBlocks.SPONGE.get() : Blocks.sponge;
-					meta = 1;
-					break;
-				case 6:
-					block = Blocks.water;
-					break;
-			}
+			Block block = getBlockForValue(value);
+			int meta = getMetaForValue(value);
 
-			if (block != null)
-				world.setBlock(pos.x + x, pos.y + y, pos.z + z, block, meta, 2);
+			int blockX = pos.x + x;
+			int blockY = pos.y + y;
+			int blockZ = pos.z + z;
+
+			int blockChunkX = blockX / 16;
+			int blockChunkZ = blockZ / 16;
+
+			if (world.getChunkProvider().chunkExists(blockChunkX, blockChunkZ) && block != null) {
+				world.setBlock(blockX, blockY, blockZ, block, meta, 2);
+			}
 		}
 
+		int baseChunkX = x / 16;
+		int baseChunkZ = z / 16;
+
 		for (int i = 0; i < 7; i++) {
-			generatePillar(world, x + 5 * i + 4 * i, y, z, ModBlocks.PRISMARINE_BLOCK.get(), 1);
-			generatePillar(world, x, y, z + 5 * i + 4 * i, ModBlocks.PRISMARINE_BLOCK.get(), 1);
-			generatePillar(world, x + 54, y, z + 5 * i + 4 * i, ModBlocks.PRISMARINE_BLOCK.get(), 1);
-			if (i != 3)
-				generatePillar(world, x + 5 * i + 4 * i, y, z + 54, ModBlocks.PRISMARINE_BLOCK.get(), 1);
+			int pillarChunkX = baseChunkX + 5 * i + 4 * i;
+			int pillarChunkZ = baseChunkZ;
+
+			if (world.getChunkProvider().chunkExists(pillarChunkX, pillarChunkZ)) {
+				generatePillar(world, x + 5 * i + 4 * i, y, z, ModBlocks.PRISMARINE_BLOCK.get(), 1);
+			}
+
+			pillarChunkX = baseChunkX;
+			pillarChunkZ = baseChunkZ + 5 * i + 4 * i;
+
+			if (world.getChunkProvider().chunkExists(pillarChunkX, pillarChunkZ)) {
+				generatePillar(world, x, y, z + 5 * i + 4 * i, ModBlocks.PRISMARINE_BLOCK.get(), 1);
+			}
+
+			pillarChunkX = baseChunkX + 3;
+			pillarChunkZ = baseChunkZ + 5 * i + 4 * i;
+
+			if (world.getChunkProvider().chunkExists(pillarChunkX, pillarChunkZ)) {
+				generatePillar(world, x + 54, y, z + 5 * i + 4 * i, ModBlocks.PRISMARINE_BLOCK.get(), 1);
+			}
+
+			if (i != 3) {
+				pillarChunkX = baseChunkX + 5 * i + 4 * i;
+				pillarChunkZ = baseChunkZ + 3;
+
+				if (world.getChunkProvider().chunkExists(pillarChunkX, pillarChunkZ)) {
+					generatePillar(world, x + 5 * i + 4 * i, y, z + 54, ModBlocks.PRISMARINE_BLOCK.get(), 1);
+				}
+			}
 		}
 	}
 
+	private static Block getBlockForValue(int value) {
+		switch (value) {
+			case 0:
+			case 1:
+			case 2:
+				return ModBlocks.PRISMARINE_BLOCK.get();
+			case 3:
+				return ModBlocks.SEA_LANTERN.get();
+			case 4:
+				return Blocks.gold_block;
+			case 5:
+				return ConfigBlocksItems.enableSponge ? ModBlocks.SPONGE.get() : Blocks.sponge;
+			case 6:
+				return Blocks.water;
+			default:
+				return null;
+		}
+	}
+
+	private static int getMetaForValue(int value) {
+		return (value >= 0 && value <= 2) ? value : 0;
+	}
+
 	private static void generatePillar(World world, int x, int y, int z, Block block, int meta) {
-		for (int i = 1; i <= 5; i++)
+		int chunkX = x / 16;
+		int chunkZ = z / 16;
+
+		if (!world.getChunkProvider().chunkExists(chunkX, chunkZ))
+			return;
+
+		for (int i = 1; i <= 5; i++) {
 			generatePillarSection(world, x, y - i, z, block, meta);
+		}
 		y -= 5;
 
 		for (; y >= 0; y--) {
 			generatePillarSection(world, x, y, z, block, meta);
-			for (int i = 0; i < 4; i++)
-				for (int k = 0; k < 4; k++)
-					if (world.getBlock(x + i, y, z).getMaterial() != Material.water && y > 3) {
+			for (int i = 0; i < 4; i++) {
+				for (int k = 0; k < 4; k++) {
+					if (world.getBlock(x + i, y, z + k).getMaterial() != Material.water && y > 3) {
 						generatePillarSection(world, x, y - 1, z, block, meta);
 						generatePillarSection(world, x, y - 2, z, block, meta);
 						return;
 					}
+				}
+			}
 		}
 	}
 
+
 	private static void generatePillarSection(World world, int x, int y, int z, Block block, int meta) {
-		for (int i = 0; i < 4; i++)
-			for (int k = 0; k < 4; k++)
-				if (world.getBlock(x + i, y, z).getBlockHardness(world, x + i, y, z + k) > 0)
+		int chunkX = x / 16;
+		int chunkZ = z / 16;
+
+		if (!world.getChunkProvider().chunkExists(chunkX, chunkZ))
+			return;
+
+		for (int i = 0; i < 4; i++) {
+			for (int k = 0; k < 4; k++) {
+				if (world.getBlock(x + i, y, z + k).getBlockHardness(world, x + i, y, z + k) > 0) {
 					world.setBlock(x + i, y, z + k, block, meta, 2);
+				}
+			}
+		}
 	}
 
 	public static void generateFile(World world, int x, int y, int z, String path) {
