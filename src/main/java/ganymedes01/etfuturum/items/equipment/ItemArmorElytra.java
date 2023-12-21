@@ -5,8 +5,8 @@ import baubles.api.expanded.BaubleItemHelper;
 import baubles.api.expanded.IBaubleExpanded;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.compat.CompatBaublesExpanded;
+import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.configs.ConfigModCompat;
 import ganymedes01.etfuturum.configuration.configs.ConfigSounds;
 import ganymedes01.etfuturum.core.utils.Utils;
@@ -14,6 +14,7 @@ import ganymedes01.etfuturum.items.BaseItem;
 import ganymedes01.etfuturum.lib.Reference;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +22,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraft.client.resources.I18n;
 
 import java.util.List;
 
@@ -54,10 +54,10 @@ public class ItemArmorElytra extends BaseItem implements IBaubleExpanded {
 		if (getElytra(playerIn) != null) {
 			return itemStackIn;
 		}
-		if (EtFuturum.hasBaublesExpanded && ConfigModCompat.elytraBaublesExpandedCompat != 0) {
+		if (ModsList.BAUBLES_EXPANDED.isLoaded() && ConfigModCompat.elytraBaublesExpandedCompat != 0) {
 			itemStackIn = BaubleItemHelper.onBaubleRightClick(itemStackIn, worldIn, playerIn);
 		}
-		if ((!EtFuturum.hasBaublesExpanded || ConfigModCompat.elytraBaublesExpandedCompat != 2) && itemStackIn.stackSize > 0 && getElytra(playerIn) == null) {
+		if ((!ModsList.BAUBLES_EXPANDED.isLoaded() || ConfigModCompat.elytraBaublesExpandedCompat != 2) && itemStackIn.stackSize > 0 && getElytra(playerIn) == null) {
 			ItemStack itemStack = playerIn.getEquipmentInSlot(3);
 			if (itemStack == null) {
 				playerIn.setCurrentItemOrArmor(3, itemStackIn.copy());
@@ -72,7 +72,7 @@ public class ItemArmorElytra extends BaseItem implements IBaubleExpanded {
 
 	@Override
 	public boolean isValidArmor(ItemStack stack, int armorType, Entity entity) {
-		return (!EtFuturum.hasBaublesExpanded || ConfigModCompat.elytraBaublesExpandedCompat != 2) && armorType == 1 && entity instanceof EntityLivingBase && getElytra((EntityLivingBase) entity) == null;
+		return (!ModsList.BAUBLES_EXPANDED.isLoaded() || ConfigModCompat.elytraBaublesExpandedCompat != 2) && armorType == 1 && entity instanceof EntityLivingBase && getElytra((EntityLivingBase) entity) == null;
 	}
 
 	@Override
@@ -89,13 +89,13 @@ public class ItemArmorElytra extends BaseItem implements IBaubleExpanded {
 	}
 
 	public static ItemStack getElytra(EntityLivingBase entity) {
-		if (!EtFuturum.hasBaublesExpanded || ConfigModCompat.elytraBaublesExpandedCompat != 2) {
+		if (!ModsList.BAUBLES_EXPANDED.isLoaded() || ConfigModCompat.elytraBaublesExpandedCompat != 2) {
 			ItemStack armorSlot = entity.getEquipmentInSlot(3);
 			if (armorSlot != null && armorSlot.getItem() instanceof ItemArmorElytra) {
 				return armorSlot;
 			}
 		}
-		if (EtFuturum.hasBaublesExpanded && ConfigModCompat.elytraBaublesExpandedCompat != 0) {
+		if (ModsList.BAUBLES_EXPANDED.isLoaded() && ConfigModCompat.elytraBaublesExpandedCompat != 0) {
 			return CompatBaublesExpanded.getElytraFromBaubles(entity);
 		}
 		return null;
@@ -108,7 +108,7 @@ public class ItemArmorElytra extends BaseItem implements IBaubleExpanded {
 			tooltip.add(I18n.format("efr.elytra.betterfps.warn1"));
 			tooltip.add(I18n.format("efr.elytra.betterfps.warn2"));
 			tooltip.add(I18n.format("efr.elytra.betterfps.warn3"));
-		} else if (EtFuturum.hasBaublesExpanded) {
+		} else if (ModsList.BAUBLES_EXPANDED.isLoaded()) {
 			String[] slots;
 			switch (ConfigModCompat.elytraBaublesExpandedCompat) {
 				default:

@@ -5,5 +5,8 @@
   "plugin": "ganymedes01.etfuturum.EtFuturumMixinPlugin",
   "refmap": "mixins.etfuturum.refmap.json",
   "target": "@env(DEFAULT)",
-  "compatibilityLevel": "JAVA_8"
+  "compatibilityLevel": "JAVA_8",
+  "overwrites": {
+    "conformVisibility": true
+  }
 }

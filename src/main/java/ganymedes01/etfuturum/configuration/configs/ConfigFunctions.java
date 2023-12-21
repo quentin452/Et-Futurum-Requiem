@@ -2,8 +2,8 @@ package ganymedes01.etfuturum.configuration.configs;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
-import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.EtFuturumMixinPlugin;
+import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.ConfigBase;
 import ganymedes01.etfuturum.core.utils.Logger;
 import net.minecraft.item.Item;
@@ -264,7 +264,8 @@ public class ConfigFunctions extends ConfigBase {
 		}
 
 		if (EtFuturumMixinPlugin.side == MixinEnvironment.Side.CLIENT && ConfigFunctions.enablePlayerSkinOverlay) {
-			if (EtFuturum.hasEars || EtFuturum.hasFoamFix || EtFuturum.hasSkinPort || EtFuturum.hasMorePlayerModels || EtFuturum.hasDragonBlockC || FMLClientHandler.instance().hasOptifine()) {
+			if (ModsList.EARS.isLoaded() || ModsList.FOAMFIX.isLoaded() || ModsList.SKINPORT.isLoaded() || ModsList.MOREPLAYERMODELS.isLoaded()
+					|| ModsList.DRAGON_BLOCK_C.isLoaded() || FMLClientHandler.instance().hasOptifine()) {
 				ConfigFunctions.enablePlayerSkinOverlay = false;
 				Logger.warn("Another skin backporting mod is in use, which introduce changes to player skins.");
 				Logger.warn("Either Ears, FoamFix, MorePlayerModels, SkinPort, Dragon Block C or OptiFine is installed.");

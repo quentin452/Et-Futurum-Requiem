@@ -1,8 +1,8 @@
 package ganymedes01.etfuturum.entities;
 
 import ganymedes01.etfuturum.ModItems;
-import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
 import ganymedes01.etfuturum.configuration.configs.ConfigTweaks;
+import ganymedes01.etfuturum.core.utils.Utils;
 import ganymedes01.etfuturum.core.utils.helpers.BlockPos;
 import ganymedes01.etfuturum.lib.Reference;
 import ganymedes01.etfuturum.recipes.ModRecipes;
@@ -88,7 +88,7 @@ public class EntityShulker extends EntityGolem implements IMob {
 			int y = MathHelper.floor_double(posY);
 			int z = MathHelper.floor_double(posZ);
 			this.setAttachmentPos(new BlockPos(x, y, z));
-			for (EnumFacing enumfacing1 : EnumFacing.values()) {
+			for (EnumFacing enumfacing1 : Utils.ENUM_FACING_VALUES) {
 				if (this.worldObj.isBlockNormalCubeDefault(x + enumfacing1.getFrontOffsetX(), y + enumfacing1.getFrontOffsetY(), z + enumfacing1.getFrontOffsetZ(), false)) {
 					this.getDataWatcher().updateObject(ATTACHED_FACE, (byte) enumfacing1.ordinal());
 					break;
@@ -160,7 +160,7 @@ public class EntityShulker extends EntityGolem implements IMob {
 	public void readEntityFromNBT(NBTTagCompound compound) {
 		super.readEntityFromNBT(compound);
 		this.getDataWatcher().updateObject(ATTACHED_FACE, (byte) EnumFacing.getFront(compound.getByte("AttachFace")).ordinal());
-		this.getDataWatcher().updateObject(PEEK_TICK, Byte.valueOf(compound.getByte("Peek")));
+		this.getDataWatcher().updateObject(PEEK_TICK, compound.getByte("Peek"));
 
 		this.setAttachmentPos(new BlockPos(compound.getInteger("APX"), compound.getInteger("APY"), compound.getInteger("APZ")));
 		this.setColor(compound.getByte("Color"));
@@ -247,7 +247,7 @@ public class EntityShulker extends EntityGolem implements IMob {
 				boolean flag = false;
 
 
-				for (EnumFacing enumfacing1 : EnumFacing.values()) {
+				for (EnumFacing enumfacing1 : Utils.ENUM_FACING_VALUES) {
 					if (this.worldObj.isBlockNormalCubeDefault(blockpos.getX() + enumfacing1.getFrontOffsetX(), blockpos.getY() + enumfacing1.getFrontOffsetY(),
 							blockpos.getZ() + enumfacing1.getFrontOffsetZ(), false)) {
 						this.getDataWatcher().updateObject(ATTACHED_FACE, (byte) enumfacing1.ordinal());
@@ -356,7 +356,7 @@ public class EntityShulker extends EntityGolem implements IMob {
 					|| this.getDataWatcher().getWatchableObjectInt(ATTACHED_Z) != zpos) {
 				this.setAttachmentPos(new BlockPos(xpos, ypos, zpos));
 				if (!this.isRiding())
-					this.getDataWatcher().updateObject(PEEK_TICK, Byte.valueOf((byte) 0));
+					this.getDataWatcher().updateObject(PEEK_TICK, (byte) 0);
 				this.isAirBorne = true;
 			}
 		}
@@ -373,7 +373,7 @@ public class EntityShulker extends EntityGolem implements IMob {
 						&& /* this.worldObj.isInsideBorder(this.worldObj.getWorldBorder(), this) && */this.worldObj.getCollidingBoundingBoxes(this, AxisAlignedBB.getBoundingBox(newx, newy, newz, newx + 1, newy + 1, newz + 1)).isEmpty()) {
 					boolean flag = false;
 
-					for (EnumFacing enumfacing : EnumFacing.values()) {
+					for (EnumFacing enumfacing : Utils.ENUM_FACING_VALUES) {
 						if (this.worldObj.isBlockNormalCubeDefault(newx + enumfacing.getFrontOffsetX(), newy + enumfacing.getFrontOffsetY(),
 								newz + enumfacing.getFrontOffsetZ(), false)) {
 							this.getDataWatcher().updateObject(ATTACHED_FACE, (byte) enumfacing.ordinal());
@@ -385,7 +385,7 @@ public class EntityShulker extends EntityGolem implements IMob {
 					if (flag) {
 						this.playSound(Reference.MCAssetVer + ":entity.shulker.teleport", 1.0F, 1.0F);
 						this.setAttachmentPos(new BlockPos(newx, newy, newz));
-						this.getDataWatcher().updateObject(PEEK_TICK, Byte.valueOf((byte) 0));
+						this.getDataWatcher().updateObject(PEEK_TICK, (byte) 0);
 						this.setAttackTarget(null);
 						return true;
 					}
@@ -560,7 +560,7 @@ public class EntityShulker extends EntityGolem implements IMob {
 	}
 
 	protected Item getDropItem() {
-		return ConfigBlocksItems.enableShulkerBoxes ? ModItems.SHULKER_SHELL.get() : null;
+		return ModItems.SHULKER_SHELL.isEnabled() ? ModItems.SHULKER_SHELL.get() : null;
 	}
 
 
@@ -575,7 +575,7 @@ public class EntityShulker extends EntityGolem implements IMob {
 
 		float chance = rand.nextFloat();
 
-		chance += p_70628_2_ * 0.0625;
+		chance += (float) (p_70628_2_ * 0.0625);
 
 		if (item != null && chance > 0.5) {
 			this.dropItem(item, 1);

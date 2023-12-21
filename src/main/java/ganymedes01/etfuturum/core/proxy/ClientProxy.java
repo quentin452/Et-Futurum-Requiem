@@ -5,7 +5,6 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
-import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.client.model.ModelShulker;
 import ganymedes01.etfuturum.client.renderer.block.*;
@@ -22,6 +21,7 @@ import ganymedes01.etfuturum.configuration.configs.ConfigMixins;
 import ganymedes01.etfuturum.core.handlers.ClientEventHandler;
 import ganymedes01.etfuturum.core.utils.VersionChecker;
 import ganymedes01.etfuturum.entities.*;
+import ganymedes01.etfuturum.lib.Reference;
 import ganymedes01.etfuturum.lib.RenderIDs;
 import ganymedes01.etfuturum.spectator.SpectatorModeClient;
 import ganymedes01.etfuturum.tileentities.*;
@@ -60,7 +60,7 @@ public class ClientProxy extends CommonProxy {
 			MinecraftForge.EVENT_BUS.register(GuiSubtitles.INSTANCE);
 		}
 
-		if (ConfigFunctions.enableUpdateChecker && !EtFuturum.SNAPSHOT_BUILD && !EtFuturum.DEV_ENVIRONMENT) {
+		if (ConfigFunctions.enableUpdateChecker && !Reference.SNAPSHOT_BUILD && !Reference.DEV_ENVIRONMENT) {
 			FMLCommonHandler.instance().bus().register(VersionChecker.instance);
 		}
 
@@ -89,9 +89,9 @@ public class ClientProxy extends CommonProxy {
 		}
 		if (ConfigFunctions.inventoryBedModels) {
 			MinecraftForgeClient.registerItemRenderer(Items.bed, new Item3DBedRenderer((BlockBed) Blocks.bed));
-			if (ConfigBlocksItems.enableDyedBeds) {
-				for (int i = 0; i < ModBlocks.BEDS.length; i++) {
-					MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.BEDS[i].get()), new Item3DBedRenderer((BlockBed) ModBlocks.BEDS[i].get()));
+			for (ModBlocks bed : ModBlocks.BEDS) {
+				if (bed.isEnabled()) {
+					MinecraftForgeClient.registerItemRenderer(bed.getItem(), new Item3DBedRenderer((BlockBed) bed.get()));
 				}
 			}
 		}
@@ -100,6 +100,8 @@ public class ClientProxy extends CommonProxy {
 	private void registerBlockRenderers() {
 		RenderingRegistry.registerBlockHandler(new BlockExtendedCrossedSquaresRenderer());
 		RenderingRegistry.registerBlockHandler(new BlockNewFenceRenderer());
+		RenderingRegistry.registerBlockHandler(new BlockTrapDoorRenderer(RenderIDs.TRAPDOOR));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWoodSign.class, new TileEntityWoodSignRenderer());
 
 		if (ModBlocks.SLIME.isEnabled()) {
 			RenderingRegistry.registerBlockHandler(new BlockDoubleLayerRenderer(13, RenderIDs.SLIME_BLOCK));
@@ -139,14 +141,6 @@ public class ClientProxy extends CommonProxy {
 
 		if (ModBlocks.BARREL.isEnabled()) {
 			RenderingRegistry.registerBlockHandler(new BlockBarrelRenderer(RenderIDs.BARREL));
-		}
-
-		if (ConfigBlocksItems.enableTrapdoors) {
-			RenderingRegistry.registerBlockHandler(new BlockTrapDoorRenderer(RenderIDs.TRAPDOOR));
-		}
-
-		if (ConfigBlocksItems.enableSigns) {
-			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWoodSign.class, new TileEntityWoodSignRenderer());
 		}
 
 		if (ConfigBlocksItems.enableGlazedTerracotta) {
@@ -203,6 +197,18 @@ public class ClientProxy extends CommonProxy {
 
 		if(ModBlocks.AZALEA.isEnabled()){
 			RenderingRegistry.registerBlockHandler(new BlockAzaleaRenderer(RenderIDs.AZALEA));
+		}
+
+		if (ModBlocks.MANGROVE_ROOTS.isEnabled()) {
+			RenderingRegistry.registerBlockHandler(new BlockMangroveRootsRenderer(RenderIDs.MANGROVE_ROOTS));
+		}
+
+		if (ModBlocks.PINK_PETALS.isEnabled()) {
+			RenderingRegistry.registerBlockHandler(new BlockPinkPetalsRenderer(RenderIDs.PINK_PETALS));
+		}
+
+		if (ModBlocks.BAMBOO.isEnabled()) {
+			RenderingRegistry.registerBlockHandler(new BlockBambooRenderer(RenderIDs.BAMBOO));
 		}
 
 		RenderingRegistry.registerBlockHandler(new BlockEmissiveLayerRenderer(RenderIDs.EMISSIVE_DOUBLE_LAYER, false));

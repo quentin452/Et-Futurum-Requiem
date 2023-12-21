@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ganymedes01.etfuturum.client.LayeredColorMaskTexture;
 import ganymedes01.etfuturum.client.OpenGLHelper;
 import ganymedes01.etfuturum.client.model.ModelBanner;
-import ganymedes01.etfuturum.lib.EnumColour;
+import ganymedes01.etfuturum.lib.EnumColor;
 import ganymedes01.etfuturum.tileentities.TileEntityBanner;
 import ganymedes01.etfuturum.tileentities.TileEntityBanner.EnumBannerPattern;
 import net.minecraft.client.Minecraft;
@@ -54,7 +54,7 @@ public class TileEntityBannerRenderer extends TileEntitySpecialRenderer {
 			}
 
 			List<EnumBannerPattern> list1 = banner.getPatternList();
-			List<EnumColour> list = banner.getColorList();
+			List<EnumColor> list = banner.getColorList();
 			ArrayList<String> arraylist = Lists.newArrayList();
 			Iterator<EnumBannerPattern> patters = list1.iterator();
 

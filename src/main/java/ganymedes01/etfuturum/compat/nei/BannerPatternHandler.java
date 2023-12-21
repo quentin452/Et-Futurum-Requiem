@@ -5,7 +5,7 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.blocks.itemblocks.ItemBlockBanner;
 import ganymedes01.etfuturum.core.utils.Utils;
-import ganymedes01.etfuturum.lib.EnumColour;
+import ganymedes01.etfuturum.lib.EnumColor;
 import ganymedes01.etfuturum.recipes.ModRecipes;
 import ganymedes01.etfuturum.tileentities.TileEntityBanner;
 import ganymedes01.etfuturum.tileentities.TileEntityBanner.EnumBannerPattern;
@@ -57,7 +57,7 @@ public class BannerPatternHandler extends TemplateRecipeHandler {
 			return;
 		}
 
-		for (EnumBannerPattern pattern : EnumBannerPattern.values()) {
+		for (EnumBannerPattern pattern : EnumBannerPattern.VALUES) {
 			if (!pattern.hasValidCrafting())
 				continue;
 			if (pattern.hasCraftingStack()) {
@@ -94,7 +94,7 @@ public class BannerPatternHandler extends TemplateRecipeHandler {
 
 				ItemStack copy = ModBlocks.BANNER.newItemStack(1, result.getItemDamage());
 				copy.setTagCompound(null);
-				EnumColour colour = patternNBT.hasKey("Color") ? EnumColour.fromDamage(patternNBT.getInteger("Color")) : null;
+				EnumColor colour = patternNBT.hasKey("Color") ? EnumColor.fromDamage(patternNBT.getInteger("Color")) : null;
 				if (!pattern.hasValidCrafting())
 					continue;
 				if (pattern.hasCraftingStack()) {
@@ -121,7 +121,7 @@ public class BannerPatternHandler extends TemplateRecipeHandler {
 	@Override
 	public void loadUsageRecipes(ItemStack ingredient) {
 		if (ingredient.getItem() == Item.getItemFromBlock(ModBlocks.BANNER.get()) && TileEntityBanner.getPatterns(ingredient) < 6)
-			for (EnumBannerPattern pattern : EnumBannerPattern.values()) {
+			for (EnumBannerPattern pattern : EnumBannerPattern.VALUES) {
 				if (!pattern.hasValidCrafting())
 					continue;
 				else if (pattern.hasCraftingStack()) {
@@ -145,7 +145,7 @@ public class BannerPatternHandler extends TemplateRecipeHandler {
 				}
 			}
 		else
-			for (EnumBannerPattern pattern : EnumBannerPattern.values())
+			for (EnumBannerPattern pattern : EnumBannerPattern.VALUES)
 				if (!pattern.hasValidCrafting())
 					continue;
 				else if (pattern.hasCraftingStack() && OreDictionary.itemMatches(pattern.getCraftingStack(), ingredient, false)) {
@@ -178,9 +178,9 @@ public class BannerPatternHandler extends TemplateRecipeHandler {
 					}
 	}
 
-	EnumColour getEnumColour(ItemStack stack) {
+	EnumColor getEnumColour(ItemStack stack) {
 		for (String ore : Utils.getOreNames(stack))
-			for (EnumColour colour : EnumColour.values())
+			for (EnumColor colour : EnumColor.VALUES)
 				if (ore.equals(colour.getOreName()))
 					return colour;
 		return null;
@@ -234,7 +234,7 @@ public class BannerPatternHandler extends TemplateRecipeHandler {
 
 		@Override
 		public PositionedStack getResult() {
-			EnumColour colour = null;
+			EnumColor colour = null;
 			ItemStack banner = null;
 			for (PositionedStack stack : getIngredients()) {
 				if (stack.item.getItem() == Item.getItemFromBlock(ModBlocks.BANNER.get()))

@@ -28,7 +28,7 @@ commands.etfuturum.fill.outOfWorld=Cannot place blocks outside of world
 commands.etfuturum.fill.success=Successfully filled %d block(s)
 
 # Containers/GUI
-#This happens if someone removes lapis as a fuel with CT and does not add anything else
+#This happens if someone removes lapis as a fuel with CT and does not add anything else				 
 container.enchant.rusrs=No fuels available ಠ_ಠ
 container.enchant.lapis.one=1 Lapis Lazuli
 container.enchant.lapis.many=%d Lapis Lazuli
@@ -353,6 +353,7 @@ item.etfuturum.shulker_shell.name=Shulker Shell
 item.etfuturum.amethyst_shard.name=Amethyst Shard
 item.etfuturum.honeycomb.name=Honeycomb
 item.etfuturum.honey_bottle.name=Honey bottle
+item.etfuturum.bamboo.name=Bamboo
 
 # Arrows
 item.etfuturum.tipped_arrow.name=Tipped Arrow
@@ -394,6 +395,9 @@ item.etfuturum.raw_uranium.name=Raw Uranium
 item.etfuturum.raw_thorium.name=Raw Thorium
 item.etfuturum.raw_tungsten.name=Raw Tungsten
 item.etfuturum.raw_titanium.name=Raw Titanium
+item.etfuturum.raw_zinc.name=Raw Zinc
+item.etfuturum.raw_magnesium.name=Raw Magnesium
+item.etfuturum.raw_boron.name=Raw Boron
 
 # Blocks
 tile.etfuturum.granite.name=Granite
@@ -603,8 +607,10 @@ tile.etfuturum.prismarine_brick_slab.name=Prismarine Bricks Slab
 tile.etfuturum.dark_prismarine_slab.name=Dark Prismarine Slab
 
 tile.etfuturum.mud.name=Mud
-tile.etfuturum.packed_mud.name=Mud
+tile.etfuturum.packed_mud.name=Packed Mud
 tile.etfuturum.mud_bricks.name=Mud Bricks
+
+tile.etfuturum.mangrove_roots.name=Mangrove Roots
 tile.etfuturum.muddy_mangrove_roots.name=Muddy Mangrove Roots
 tile.etfuturum.mud_brick_stairs.name=Mud Brick Stairs
 tile.etfuturum.mud_brick_slab.name=Mud Brick Slab
@@ -643,8 +649,19 @@ tile.etfuturum.prismarine_stairs.name=Prismarine Stairs
 tile.etfuturum.prismarine_brick_stairs.name=Prismarine Bricks Stairs
 tile.etfuturum.dark_prismarine_stairs.name=Dark Prismarine Stairs
 
+tile.etfuturum.pink_petals.name=Pink Petals
+
+tile.etfuturum.mangrove_propagule.name=Mangrove Propagule
+tile.etfuturum.cherry_sapling.name=Cherry Sapling
+
 tile.etfuturum.azalea.name=Azalea
 tile.etfuturum.flowering_azalea.name=Flowering Azalea
+
+tile.etfuturum.azalea_leaves.name=Azalea Leaves
+tile.etfuturum.flowering_azalea_leaves.name=Flowering Azalea Leaves
+
+tile.etfuturum.mangrove_leaves.name=Mangrove Leaves
+tile.etfuturum.cherry_leaves.name=Cherry Leaves
 
 tile.etfuturum.crimson_stem.name=Crimson Stem
 tile.etfuturum.warped_stem.name=Warped Stem
@@ -1044,6 +1061,9 @@ tile.etfuturum.raw_uranium_block.name=Raw Uranium Block
 tile.etfuturum.raw_thorium_block.name=Raw Thorium Block
 tile.etfuturum.raw_tungsten_block.name=Raw Tungsten Block
 tile.etfuturum.raw_titanium_block.name=Raw Titanium Block
+tile.etfuturum.raw_zinc_block.name=Raw Zinc Block
+tile.etfuturum.raw_magnesium_block.name=Raw Magnesium Block
+tile.etfuturum.raw_boron_block.name=Raw Boron Block
 
 tile.etfuturum.deepslate_aluminum_ore.name=Deepslate Aluminum Ore
 tile.etfuturum.deepslate_tin_ore.name=Deepslate Tin Ore
@@ -1056,6 +1076,9 @@ tile.etfuturum.deepslate_uranium_ore.name=Deepslate Uranium Ore
 tile.etfuturum.deepslate_thorium_ore.name=Deepslate Thorium Ore
 tile.etfuturum.deepslate_tungsten_ore.name=Deepslate Tungsten Ore
 tile.etfuturum.deepslate_titanium_ore.name=Deepslate Titanium Ore
+tile.etfuturum.deepslate_zinc_ore.name=Deepslate Zinc Ore
+tile.etfuturum.deepslate_magnesium_ore.name=Deepslate Magnesium Ore
+tile.etfuturum.deepslate_boron_ore.name=Deepslate Boron Ore
 
 tile.etfuturum.deepslate_certus_quartz_ore.name=Deepslate Certus Quartz Ore
 tile.etfuturum.deepslate_charged_certus_quartz_ore.name=Deepslate Charged Certus Quartz Ore
@@ -1768,5 +1791,3 @@ efr.elytra.flight.disabled=Elytra flight has been disabled for your own safety.
 efr.elytra.betterfps.warn1=§cBetterFPS is configured poorly.
 efr.elytra.betterfps.warn2=§cCheck the chat warning for more info.
 efr.elytra.betterfps.warn3=§cElytra flight has been disabled.
-
-

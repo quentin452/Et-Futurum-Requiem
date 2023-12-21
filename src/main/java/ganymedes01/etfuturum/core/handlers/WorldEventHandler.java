@@ -1,19 +1,19 @@
 package ganymedes01.etfuturum.core.handlers;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.api.BeePlantRegistry;
 import ganymedes01.etfuturum.api.event.PostTreeGenerateEvent;
 import ganymedes01.etfuturum.api.mappings.RegistryMapping;
+import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.configs.ConfigWorld;
 import ganymedes01.etfuturum.core.proxy.CommonProxy;
 import ganymedes01.etfuturum.core.utils.Logger;
+import ganymedes01.etfuturum.core.utils.Utils;
 import ganymedes01.etfuturum.core.utils.WeightedRandomList;
 import ganymedes01.etfuturum.entities.EntityBee;
 import ganymedes01.etfuturum.tileentities.TileEntityBeeHive;
@@ -38,7 +38,6 @@ import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
 
 import java.lang.reflect.Constructor;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -49,23 +48,6 @@ public class WorldEventHandler {
 	public static final WorldEventHandler INSTANCE = new WorldEventHandler();
 
 	private WorldEventHandler() {
-		//If the mangrove swamp or cherry grove is added, it should be a 5% (.05F chance)
-		//If the meadow is added, it should be a 100% (1F chance)
-		for (BiomeGenBase biome : BiomeDictionary.getBiomesForType(BiomeDictionary.Type.PLAINS)) {
-			List types = Lists.newArrayList(BiomeDictionary.getTypesForBiome(biome));
-			if (!types.contains(BiomeDictionary.Type.HOT) && !types.contains(BiomeDictionary.Type.SAVANNA)) {
-				BEE_NEST_BIOMES.put(biome, .05F);//5% chance to try to place a hive
-			}
-		}
-		for (BiomeGenBase biome : BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST)) {
-			List types = Lists.newArrayList(BiomeDictionary.getTypesForBiome(biome));
-			if (types.size() == 1 || (types.size() == 2 && types.contains(BiomeDictionary.Type.HILLS))) {
-				BEE_NEST_BIOMES.put(biome, .002F);//.2% chance to try to place a hive
-			}
-		}
-		BEE_NEST_BIOMES.put(BiomeGenBase.getBiome(BiomeGenBase.plains.biomeID + 128), .05F);//.2% chance to try to place a hive (Sunflower Plains)
-		BEE_NEST_BIOMES.put(BiomeGenBase.getBiome(BiomeGenBase.forest.biomeID + 128), .02F);//.2% chance to try to place a hive (Flower Forest)
-
 		WeightedRandomList<WorldGenerator> oakSaplingTrees = new WeightedRandomList<>();
 		oakSaplingTrees.addEntry(new WorldGenTrees(false), 0.9D);
 		oakSaplingTrees.addEntry(new WorldGenBigTree(false), 0.1D);
@@ -75,7 +57,7 @@ public class WorldEventHandler {
 		birchSaplingTrees.addEntry(new WorldGenForest(true, false), 0.0D); //It's the only entry in the list, it does not need a weight.
 		BEE_NEST_SAPLINGS.put(new RegistryMapping<>(Blocks.sapling, 2), birchSaplingTrees); //Also yes that is really the name of the birch tree gen class lol
 
-		if (EtFuturum.hasNatura) {
+		if (ModsList.NATURA.isLoaded()) {
 			try {
 				Constructor<? super Object> constructor;
 				WeightedRandomList<WorldGenerator> sakuraSaplingTrees = new WeightedRandomList<>();
@@ -97,6 +79,23 @@ public class WorldEventHandler {
 				e.printStackTrace();
 			}
 		}
+	}
+
+
+	public void postInit() {
+		//If the mangrove swamp or cherry grove is added, it should be a 5% (.05F chance)
+		//If the meadow is added, it should be a 100% (1F chance)
+		for (BiomeGenBase biome : Utils.excludeBiomesFromTypesWithDefaults(
+				BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST),
+				BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.SNOWY, BiomeDictionary.Type.SANDY)) {
+			BEE_NEST_BIOMES.put(biome, .002F);//.2% chance to try to place a hive
+		}
+		for (BiomeGenBase biome : Utils.excludeBiomesFromTypesWithDefaults(
+				BiomeDictionary.getBiomesForType(BiomeDictionary.Type.PLAINS),
+				BiomeDictionary.Type.SAVANNA, BiomeDictionary.Type.SNOWY, BiomeDictionary.Type.SANDY)) {
+			BEE_NEST_BIOMES.put(biome, .05F);//5% chance to try to place a hive
+		}
+		BEE_NEST_BIOMES.put(BiomeGenBase.getBiome(BiomeGenBase.forest.biomeID + 128), .02F);//2% chance to try to place a hive (Flower Forest)
 	}
 
 	private static boolean hasRegistered;
@@ -121,7 +120,7 @@ public class WorldEventHandler {
 			//TODO: Mangrove and cherry trees should be here when they are added. Maybe support modded saplings too
 			Block sapling = event.world.getBlock(event.x, event.y, event.z);
 			int saplingMeta = event.world.getBlockMetadata(event.x, event.y, event.z);
-			WeightedRandomList<WorldGenerator> treesForSapling = BEE_NEST_SAPLINGS.get(new RegistryMapping<>(sapling, saplingMeta % 8));
+			WeightedRandomList<WorldGenerator> treesForSapling = BEE_NEST_SAPLINGS.get(RegistryMapping.getKeyFor(sapling, saplingMeta % 8));
 			if (treesForSapling != null) {
 				event.world.setBlockToAir(event.x, event.y, event.z);
 				if (treesForSapling.getRandom(event.rand).generate(event.world, event.rand, event.x, event.y, event.z)) {

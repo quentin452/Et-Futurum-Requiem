@@ -109,6 +109,7 @@ public class ModSounds {
 	public static final SoundType soundNetherWood = new CustomSound("nether_wood").setDisabledSound(Block.soundTypeWood);
 
 	public static final SoundType soundMud = new CustomSound("mud").setDisabledSound(Block.soundTypeGravel);
+	public static final SoundType soundMangroveRoots = new CustomSound("mangrove_roots").setDisabledSound(Block.soundTypeGrass);
 	public static final SoundType soundMuddyMangroveRoots = new CustomSound("muddy_mangrove_roots").setDisabledSound(Block.soundTypeGravel);
 	public static final SoundType soundPackedMud = new CustomSound("packed_mud");
 	public static final SoundType soundMudBricks = new CustomSound("mud_bricks");
@@ -123,7 +124,15 @@ public class ModSounds {
 	public static final SoundType soundCherrySapling = new CustomSound("cherry_sapling").setDisabledSound(Block.soundTypeGrass);
 	public static final SoundType soundCherryLeaves = new CustomSound("cherry_leaves").setDisabledSound(Block.soundTypeGrass);
 	public static final SoundType soundCherryWood = new CustomSound("cherry_wood").setDisabledSound(Block.soundTypeWood);
+	public static final SoundType soundPinkPetals = new CustomSound("pink_petals").setDisabledSound(Block.soundTypeGrass);
+	public static final SoundType soundBamboo = new CustomSound("bamboo").setDisabledSound(Block.soundTypeGrass);
 	public static final SoundType soundBambooWood = new CustomSound("bamboo_wood").setDisabledSound(Block.soundTypeWood);
+	public static final SoundType soundBambooSapling = new CustomSound("bamboo_sapling") {
+		@Override
+		public String getStepResourcePath() {
+			return Block.soundTypeGrass.getStepResourcePath();
+		}
+	}.setDisabledSound(Block.soundTypeGrass);
 
 	public static class CustomSound extends SoundType {
 

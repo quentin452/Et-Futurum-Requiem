@@ -65,7 +65,7 @@ public class TileEntityShulkerBoxRenderer extends TileEntitySpecialRenderer {
 
 		if (te.hasWorldObj()) {
 			int facing = te.facing;
-			enumfacing = ForgeDirection.values()[facing];
+			enumfacing = ForgeDirection.VALID_DIRECTIONS[facing];
 		}
 
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);

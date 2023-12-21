@@ -4,8 +4,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ganymedes01.etfuturum.api.mappings.RegistryMapping;
 import ganymedes01.etfuturum.client.sound.ModSounds;
 import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
-import ganymedes01.etfuturum.configuration.configs.ConfigSounds;
 import ganymedes01.etfuturum.core.utils.Logger;
+import ganymedes01.etfuturum.core.utils.Utils;
 import ganymedes01.etfuturum.recipes.ModRecipes;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -197,8 +197,9 @@ public class DeepslateOreRegistry {
 
 				boolean saltyModOre = oreDeep.getClass().getName().toLowerCase().contains("saltymod");
 
-				if (ConfigSounds.newBlockSounds && (oreDeep.stepSound == Block.soundTypeStone || saltyModOre)) {
-					oreDeep.setStepSound(ModSounds.soundDeepslate);//SaltyMod introduces a deepslate salt ore but it assumes an old resource domain, making it silent on new EFR versions
+				if (oreDeep.stepSound == Block.soundTypeStone || saltyModOre) {
+					Utils.setBlockSound(oreDeep, ModSounds.soundDeepslate);
+					//SaltyMod introduces a deepslate salt ore but it assumes an old resource domain, making it silent on new EFR versions
 				}
 
 				ItemStack

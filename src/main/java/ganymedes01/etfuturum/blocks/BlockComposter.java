@@ -42,6 +42,9 @@ public class BlockComposter extends Block implements FakeTileEntityProvider {
 	@SideOnly(Side.CLIENT)
 	public IIcon fullCompostIcon;
 
+	public static int FULL_META = 7;
+	public static int HARVESTABLE_META = 8;
+
 	public BlockComposter() {
 		super(Material.wood);
 		this.setStepSound(soundTypeWood);
@@ -100,9 +103,9 @@ public class BlockComposter extends Block implements FakeTileEntityProvider {
 			 */
 			int fillAmount = (int) (chance * .01F) + (world.rand.nextInt(100) < chance % 100 ? 1 : 0);
 			if (fillAmount > 0) {
-				world.setBlockMetadataWithNotify(x, y, z, Math.min(meta + fillAmount, 6), 3);
+				world.setBlockMetadataWithNotify(x, y, z, Math.min(meta + fillAmount, FULL_META), 3);
 				world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, Reference.MCAssetVer + ":block.composter.fill_success", 1, 1);
-				if (fillAmount + meta > 5) {
+				if (fillAmount + meta >= FULL_META) {
 					world.scheduleBlockUpdate(x, y, z, ModBlocks.COMPOSTER.get(), world.rand.nextInt(10) + 10);
 				}
 			} else {
@@ -115,7 +118,7 @@ public class BlockComposter extends Block implements FakeTileEntityProvider {
 
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float clickX, float clickY, float clickZ) {
 		int meta = world.getBlockMetadata(x, y, z);
-		if (meta < 6) {
+		if (meta < FULL_META) {
 			ItemStack stack = player.getCurrentEquippedItem();
 			int chance = CompostingRegistry.getCompostChance(stack);
 			if (chance > 0) {
@@ -125,12 +128,12 @@ public class BlockComposter extends Block implements FakeTileEntityProvider {
 						stack.stackSize--;
 					}
 				}
-				for (int i = 0; i < 5; i++) {
+				for (int i = 0; i <= 5; i++) {
 					world.spawnParticle("happyVillager", ((world.rand.nextDouble() * 0.875D) + 0.125D) + x, 0.25D + (0.125D * meta) + y, ((world.rand.nextDouble() * 0.875D) + 0.125D) + z, 0, 0, 0);
 				}
 				return true;
 			}
-		} else if (meta == 7) {
+		} else if (meta == HARVESTABLE_META) {
 			if (!world.isRemote) {
 				EntityItem item = new EntityItem(world, x + 0.5D, y + 1, z + 0.5D, EtFuturumLootTables.COMPOSTER_LOOT.getOneItem(world.rand));
 				item.motionX = world.rand.nextDouble() * 0.5D;
@@ -146,9 +149,9 @@ public class BlockComposter extends Block implements FakeTileEntityProvider {
 	}
 
 	public void updateTick(World world, int x, int y, int z, Random rand) {
-		if (world.getBlockMetadata(x, y, z) == 6) {
+		if (world.getBlockMetadata(x, y, z) == FULL_META) {
 			world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, Reference.MCAssetVer + ":block.composter.ready", 1, 1);
-			world.setBlockMetadataWithNotify(x, y, z, 7, 3);
+			world.setBlockMetadataWithNotify(x, y, z, HARVESTABLE_META, 3);
 		}
 	}
 
@@ -179,9 +182,9 @@ public class BlockComposter extends Block implements FakeTileEntityProvider {
 	public TileEntity getFakeTileEntity(World world, int x, int y, int z) {
 		int meta = world.getBlockMetadata(x, y, z);
 		ISidedInventory targetInv;
-		if (meta < 6)
+		if (meta < FULL_META)
 			targetInv = new InventoryEmptyComposter(world, x, y, z);
-		else if (meta == 7)
+		else if (meta == HARVESTABLE_META)
 			targetInv = new InventoryFullComposter(world, x, y, z);
 		else
 			targetInv = new InventoryDummy(world, x, y, z);

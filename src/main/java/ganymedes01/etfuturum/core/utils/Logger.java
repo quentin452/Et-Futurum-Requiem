@@ -1,7 +1,6 @@
 package ganymedes01.etfuturum.core.utils;
 
 import cpw.mods.fml.common.FMLLog;
-import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.lib.Reference;
 import org.apache.logging.log4j.Level;
 
@@ -18,7 +17,7 @@ public class Logger {
 	}
 
 	public static void debug(Object object) {
-		if (EtFuturum.DEV_ENVIRONMENT || EtFuturum.SNAPSHOT_BUILD) {
+		if (Reference.DEV_ENVIRONMENT || Reference.SNAPSHOT_BUILD) {
 			log(Level.DEBUG, object);
 		}
 	}

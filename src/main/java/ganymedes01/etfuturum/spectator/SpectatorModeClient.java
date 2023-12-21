@@ -58,9 +58,8 @@ public class SpectatorModeClient extends SpectatorMode {
 	@SideOnly(Side.CLIENT)
 	public void onRenderEntity(RenderLivingEvent.Pre event) {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		Entity entity = event.entity;
 		Entity entity2 = SPECTATING_ENTITIES.get(player);
-		if (isSpectator(player) && SPECTATING_ENTITIES.containsKey(player) && SPECTATING_ENTITIES.get(player).equals(event.entity) && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+		if (isSpectator(player) && entity2 != null && entity2.equals(event.entity) && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
 			event.setCanceled(true);
 		}
 	}
@@ -108,8 +107,9 @@ public class SpectatorModeClient extends SpectatorMode {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onFireRender(RenderBlockOverlayEvent event) {
-		if (isSpectator(Minecraft.getMinecraft().thePlayer))
+		if (isSpectator(Minecraft.getMinecraft().thePlayer)) {
 			event.setCanceled(true);
+		}
 	}
 
 	/* TODO look into increasing the distance instead of outright disabling it */

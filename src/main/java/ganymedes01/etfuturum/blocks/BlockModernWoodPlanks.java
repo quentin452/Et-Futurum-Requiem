@@ -3,7 +3,6 @@ package ganymedes01.etfuturum.blocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
-import ganymedes01.etfuturum.configuration.configs.ConfigFunctions;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -43,11 +42,7 @@ public class BlockModernWoodPlanks extends BaseSubtypesBlock {
 
 	@Override
 	public boolean isFlammable(IBlockAccess aWorld, int aX, int aY, int aZ, ForgeDirection aSide) {
-		if (ConfigFunctions.enableExtraBurnableBlocks) {
-			int meta = aWorld.getBlockMetadata(aX, aY, aZ) % getTypes().length;
-			return meta > 1;
-		}
-		return false;
+		return aWorld.getBlockMetadata(aX, aY, aZ) % getTypes().length > 1;
 	}
 
 	@Override

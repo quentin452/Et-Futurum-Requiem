@@ -4,16 +4,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModItems;
-import ganymedes01.etfuturum.configuration.configs.ConfigFunctions;
 import ganymedes01.etfuturum.core.utils.Utils;
-import ganymedes01.etfuturum.items.BaseUninflammableItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 
 public class ItemEFRArmour extends ItemArmor implements ISpecialArmor {
@@ -48,18 +45,6 @@ public class ItemEFRArmour extends ItemArmor implements ISpecialArmor {
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
 		String wearingType = "netherite";
 		return this.armorType == 2 ? "textures/models/armor/" + wearingType + "_layer_2.png" : "textures/models/armor/" + wearingType + "_layer_1.png";
-	}
-
-	@Override
-	public boolean hasCustomEntity(ItemStack stack) {
-		return getUnlocalizedName().contains("netherite") && !ConfigFunctions.enableNetheriteFlammable;
-	}
-
-	@Override
-	public Entity createEntity(World world, Entity location, ItemStack itemstack) {
-		if (!getUnlocalizedName().contains("netherite"))
-			return null;
-		return BaseUninflammableItem.createUninflammableItem(world, location);
 	}
 
 	@Override

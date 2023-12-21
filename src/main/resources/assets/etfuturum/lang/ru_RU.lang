@@ -353,6 +353,7 @@ item.etfuturum.shulker_shell.name=Панцирь шалкера
 item.etfuturum.amethyst_shard.name=Осколок аметиста
 item.etfuturum.honeycomb.name=Пчелиные соты
 item.etfuturum.honey_bottle.name=Бутылочка мёда
+item.etfuturum.bamboo.name=Бамбук
 
 # Стрелы (Arrows)
 item.etfuturum.tipped_arrow.name=Стрела с эффектом
@@ -393,6 +394,9 @@ item.etfuturum.raw_uranium.name=Необработанный уран
 item.etfuturum.raw_thorium.name=Необработанный торий
 item.etfuturum.raw_tungsten.name=Необработанный вольфрам
 item.etfuturum.raw_titanium.name=Необработанный титан
+item.etfuturum.raw_zinc.name=Необработанный цинк
+item.etfuturum.raw_magnesium.name=Необработанный магний
+item.etfuturum.raw_boron.name=Необработанный бор
 
 # Блоки (Blocks)
 tile.etfuturum.granite.name=Гранит
@@ -587,8 +591,19 @@ tile.etfuturum.warped_nylium.name=Искажённый нилий
 tile.etfuturum.weeping_vines.name=Плакучая лоза
 tile.etfuturum.twisting_vines.name=Вьющаяся лоза
 
+tile.etfuturum.pink_petals.name=Розовые лепестки
+
+tile.etfuturum.mangrove_propagule.name=Мангровый отросток
+tile.etfuturum.cherry_sapling.name=Саженец вишни
+
 tile.etfuturum.azalea.name=Азалия
 tile.etfuturum.flowering_azalea.name=Цветущая азалия
+
+tile.etfuturum.azalea_leaves.name=Листья азалии
+tile.etfuturum.flowering_azalea_leaves.name=Листья цветущей азалии
+
+tile.etfuturum.mangrove_leaves.name=Мангровые листья
+tile.etfuturum.cherry_leaves.name=Вишнёвые листья
 
 tile.etfuturum.crimson_stem.name=Багровый стебель
 tile.etfuturum.warped_stem.name=Искажённый стебель
@@ -994,6 +1009,9 @@ tile.etfuturum.raw_uranium_block.name=Блок необработанного у
 tile.etfuturum.raw_thorium_block.name=Блок необработанного тория
 tile.etfuturum.raw_tungsten_block.name=Блок необработанного вольфрама
 tile.etfuturum.raw_titanium_block.name=Блок необработанного титана
+tile.etfuturum.raw_zinc_block.name=Блок необработанного цинка
+tile.etfuturum.raw_magnesium_block.name=Блок необработанного магния
+tile.etfuturum.raw_boron_block.name=Блок необработанного бора
 
 tile.etfuturum.deepslate_aluminum_ore.name=Глубинная алюминиевая руда
 tile.etfuturum.deepslate_tin_ore.name=Глубинная оловянная руда
@@ -1006,6 +1024,9 @@ tile.etfuturum.deepslate_uranium_ore.name=Глубинная урановая р
 tile.etfuturum.deepslate_thorium_ore.name=Глубинная ториевая руда
 tile.etfuturum.deepslate_tungsten_ore.name=Глубинная вольфрамовая руда
 tile.etfuturum.deepslate_titanium_ore.name=Глубинная титановая руда
+tile.etfuturum.deepslate_zinc_ore.name=Глубинная цинковая руда
+tile.etfuturum.deepslate_magnesium_ore.name=Глубинная магниевая руда
+tile.etfuturum.deepslate_boron_ore.name=Глубинная борная руда
 
 tile.etfuturum.deepslate_certus_quartz_ore.name=Глубинная руда истинного кварца
 tile.etfuturum.deepslate_charged_certus_quartz_ore.name=Глубинная заряженная руда истинного кварца
@@ -1027,6 +1048,8 @@ tile.etfuturum.target.name=Мишень
 tile.etfuturum.mud.name=Грязь
 tile.etfuturum.packed_mud.name=Плотная грязь
 tile.etfuturum.mud_bricks.name=Саманные кирпичи
+
+tile.etfuturum.mangrove_roots.name=Мангровые корни
 tile.etfuturum.muddy_mangrove_roots.name=Грязные мангровые корни
 tile.etfuturum.mud_brick_stairs.name=Саманные ступеньки
 tile.etfuturum.mud_brick_slab.name=Саманная плита

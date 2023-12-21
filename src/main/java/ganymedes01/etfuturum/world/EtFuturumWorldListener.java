@@ -1,8 +1,8 @@
 package ganymedes01.etfuturum.world;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModBlocks;
+import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.configs.ConfigMixins;
 import ganymedes01.etfuturum.configuration.configs.ConfigWorld;
 import net.minecraft.block.Block;
@@ -72,7 +72,7 @@ public class EtFuturumWorldListener implements IWorldAccess {
 			}
 		}
 
-		if (EtFuturum.hasBackInSlime && ConfigMixins.betterPistons) {
+		if (ModsList.BACK_IN_SLIME.isLoaded() && ConfigMixins.betterPistons) {
 			replacements.put(GameRegistry.findBlock("bis", "SlimePistonBase"), Blocks.piston);
 			replacements.put(GameRegistry.findBlock("bis", "StickySlimePistonBase"), Blocks.sticky_piston);
 			replacements.put(GameRegistry.findBlock("bis", "SlimePistonHead"), Blocks.piston_head);

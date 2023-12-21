@@ -26,7 +26,6 @@ public class FallingDustFX extends EtFuturumFXParticle {
 		super.onUpdate();
 		this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
 
-		this.prevParticleAngle = this.particleAngle;
 		this.particleAngle += (float) Math.PI * this.rotSpeed * 2.0F;
 
 		if (this.isCollided) {

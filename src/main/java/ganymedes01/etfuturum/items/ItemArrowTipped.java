@@ -90,10 +90,10 @@ public class ItemArrowTipped extends Item {
 				return arraylist;
 			}
 		}
-		List list = (List) this.effectCache.get(Integer.valueOf(stack.getItemDamage()));
+		List list = (List) this.effectCache.get(stack.getItemDamage());
 		if (list == null) {
 			list = getPotionEffects(stack.getItemDamage(), false);
-			this.effectCache.put(Integer.valueOf(stack.getItemDamage()), list);
+			this.effectCache.put(stack.getItemDamage(), list);
 		}
 		return list;
 	}
@@ -121,7 +121,7 @@ public class ItemArrowTipped extends Item {
 					List list1 = getPotionEffects(i1, false);
 
 					if (list1 != null && !list1.isEmpty()) {
-						field_77835_b.put(list1, Integer.valueOf(i1));
+						field_77835_b.put(list1, i1);
 					}
 				}
 			}
@@ -130,7 +130,7 @@ public class ItemArrowTipped extends Item {
 		Iterator iterator = field_77835_b.values().iterator();
 
 		while (iterator.hasNext()) {
-			j = ((Integer) iterator.next()).intValue();
+			j = (Integer) iterator.next();
 			list.add(new ItemStack(item, 1, j));
 		}
 

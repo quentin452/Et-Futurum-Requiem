@@ -4,12 +4,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.api.DeepslateOreRegistry;
+import ganymedes01.etfuturum.blocks.BaseBlock;
 import ganymedes01.etfuturum.client.sound.ModSounds;
 import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
 import ganymedes01.etfuturum.configuration.configs.ConfigSounds;
-import ganymedes01.etfuturum.core.utils.Utils;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockOre;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,20 +24,18 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Random;
 
-public class BlockDeepslateOre extends Block {
+public class BlockDeepslateOre extends BaseBlock {
 
 	public Block base;
 
 	public BlockDeepslateOre(Block block, boolean defaultMapping) {
 		super(block.getMaterial());
-		setAttribs(this, block);
+		copyAttribs(block);
 		base = block;
 		if (getClass().getName().startsWith("ganymedes01.etfuturum")) { //We only want to do this on my own stuff, not mods that extend it.
 			//We use the texture name because texture naming conventions look just like namespaced IDs.
 			//Block.blockRegistry.getNameFor does not work in preInit
-			setBlockName(Utils.getUnlocalisedName("deepslate_" + block.textureName.toLowerCase()));
-			setBlockTextureName("deepslate_" + block.textureName);
-			setCreativeTab(EtFuturum.creativeTabBlocks);
+			setNames("deepslate_" + block.textureName);
 		}
 		if (defaultMapping && ConfigBlocksItems.enableDeepslate && ConfigBlocksItems.enableDeepslateOres) {
 			addDeepslateMappings();
@@ -49,10 +46,24 @@ public class BlockDeepslateOre extends Block {
 		this(block, true);
 	}
 
+	/**
+	 * Deprecated in favor of a function in the class itself instead.
+	 * This is done so mods that extend this class can just override it if they don't want the default copied settings.
+	 *
+	 * @param to
+	 * @param from
+	 */
+	@Deprecated
 	public static void setAttribs(Block to, Block from) {
 		EtFuturum.copyAttribs(to, from);
 		to.setHardness(from.blockHardness * 1.5F);
 		to.setStepSound(ConfigSounds.newBlockSounds ? ModSounds.soundDeepslate : soundTypeStone);
+	}
+
+	protected void copyAttribs(Block from) {
+		EtFuturum.copyAttribs(this, from);
+		setHardness(from.blockHardness * 1.5F);
+		setBlockSound(ModSounds.soundDeepslate);
 	}
 
 	protected void addDeepslateMappings() {
@@ -77,9 +88,11 @@ public class BlockDeepslateOre extends Block {
 	public int quantityDroppedWithBonus(int i, Random p_149745_1_) {
 		return base.quantityDroppedWithBonus(i, p_149745_1_);
 	}
+
 	public void dropBlockAsItemWithChance(World p_149690_1_, int p_149690_2_, int p_149690_3_, int p_149690_4_, int p_149690_5_, float p_149690_6_, int p_149690_7_) {
 		super.dropBlockAsItemWithChance(p_149690_1_, p_149690_2_, p_149690_3_, p_149690_4_, p_149690_5_, p_149690_6_, p_149690_7_);
 	}
+
 	@Override
 	public int getExpDrop(IBlockAccess p_149690_1_, int p_149690_5_, int p_149690_7_) {
 		return base.getExpDrop(p_149690_1_, p_149690_5_, p_149690_7_);

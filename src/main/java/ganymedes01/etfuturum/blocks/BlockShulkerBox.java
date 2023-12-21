@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModItems;
+import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
 import ganymedes01.etfuturum.configuration.configs.ConfigModCompat;
 import ganymedes01.etfuturum.core.utils.Utils;
@@ -72,7 +73,7 @@ public class BlockShulkerBox extends BlockContainer {
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
 		TileEntityShulkerBox box = (TileEntityShulkerBox) world.getTileEntity(x, y, z);
 		if (stack.hasTagCompound()) {
-			box.type = ShulkerBoxType.values()[stack.getTagCompound().getByte("Type")];
+			box.type = ShulkerBoxType.VALUES[stack.getTagCompound().getByte("Type")];
 			box.chestContents = new ItemStack[box.getSizeInventory()];
 
 			NBTTagList nbttaglist = stack.getTagCompound().getTagList("Items", 10);
@@ -371,7 +372,7 @@ public class BlockShulkerBox extends BlockContainer {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
-		for (byte i = 0; i <= (EtFuturum.hasIronChest && ConfigModCompat.shulkerBoxesIronChest ? 7 : 0); i++) {
+		for (byte i = 0; i <= (ModsList.IRON_CHEST.isLoaded() && ConfigModCompat.shulkerBoxesIronChest ? 7 : 0); i++) {
 			for (byte j = 0; j <= (ConfigBlocksItems.enableDyedShulkerBoxes ? 16 : 0); j++) {
 
 				NBTTagCompound tag = new NBTTagCompound();
@@ -405,7 +406,7 @@ public class BlockShulkerBox extends BlockContainer {
 			if (box.color > 0 && ConfigBlocksItems.enableDyedShulkerBoxes) {
 				stack.getTagCompound().setByte("Color", box.color);
 			}
-			if (box.type.ordinal() > 0 && ConfigModCompat.shulkerBoxesIronChest && EtFuturum.hasIronChest) {
+			if (box.type.ordinal() > 0 && ConfigModCompat.shulkerBoxesIronChest && ModsList.IRON_CHEST.isLoaded()) {
 				stack.getTagCompound().setByte("Type", (byte) box.type.ordinal());
 			}
 		}

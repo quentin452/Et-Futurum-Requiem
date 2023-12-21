@@ -22,7 +22,8 @@ public class BlockDeepslateRedstoneOre extends BlockDeepslateOre {
 		if (lit) {
 			setCreativeTab(null);
 			setBlockName(Utils.getUnlocalisedName("deepslate_lit_redstone_ore"));
-			this.isLit = lit;
+			setTickRandomly(true);
+			this.isLit = true;
 		}
 	}
 

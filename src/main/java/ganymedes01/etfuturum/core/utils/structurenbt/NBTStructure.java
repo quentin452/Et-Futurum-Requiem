@@ -394,7 +394,7 @@ public class NBTStructure {
 		if (i < 0 || i > 3) {
 			throw new IllegalArgumentException("Facing int must be at least 0 and at most 3!");
 		}
-		return ForgeDirection.values()[i + 2];
+		return ForgeDirection.VALID_DIRECTIONS[i + 2];
 	}
 
 	public final int getIntFromFacing(ForgeDirection dir) {

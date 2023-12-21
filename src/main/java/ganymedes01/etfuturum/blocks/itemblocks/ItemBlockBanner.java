@@ -2,7 +2,7 @@ package ganymedes01.etfuturum.blocks.itemblocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ganymedes01.etfuturum.lib.EnumColour;
+import ganymedes01.etfuturum.lib.EnumColor;
 import ganymedes01.etfuturum.recipes.ModRecipes;
 import ganymedes01.etfuturum.tileentities.TileEntityBanner;
 import ganymedes01.etfuturum.tileentities.TileEntityBanner.EnumBannerPattern;
@@ -105,7 +105,7 @@ public class ItemBlockBanner extends ItemBlock {
 
 			for (int i = 0; i < nbttaglist.tagCount() && i < 6; i++) {
 				NBTTagCompound nbt = nbttaglist.getCompoundTagAt(i);
-				EnumColour color = EnumColour.fromDamage(nbt.getInteger("Color"));
+				EnumColor color = EnumColor.fromDamage(nbt.getInteger("Color"));
 				EnumBannerPattern pattern = EnumBannerPattern.getPatternByID(nbt.getString("Pattern"));
 
 				if (pattern != null) {
@@ -121,7 +121,7 @@ public class ItemBlockBanner extends ItemBlock {
 		if (renderPass == 0) {
 			return 0xFFFFFF;
 		}
-		EnumColour EnumColour = getBaseColor(stack);
+		EnumColor EnumColour = getBaseColor(stack);
 		return EnumColour.getRGB();
 	}
 
@@ -133,14 +133,14 @@ public class ItemBlockBanner extends ItemBlock {
 		}
 	}
 
-	private EnumColour getBaseColor(ItemStack stack) {
+	private EnumColor getBaseColor(ItemStack stack) {
 		NBTTagCompound nbttagcompound = getSubTag(stack, "BlockEntityTag", false);
-		EnumColour color;
+		EnumColor color;
 
 		if (nbttagcompound != null && nbttagcompound.hasKey("Base")) {
-			color = EnumColour.fromDamage(nbttagcompound.getInteger("Base"));
+			color = EnumColor.fromDamage(nbttagcompound.getInteger("Base"));
 		} else {
-			color = EnumColour.fromDamage(stack.getItemDamage());
+			color = EnumColor.fromDamage(stack.getItemDamage());
 		}
 
 		return color;

@@ -4,6 +4,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
 import ganymedes01.etfuturum.configuration.configs.ConfigMixins;
 import ganymedes01.etfuturum.core.utils.helpers.SafeEnumHelperClient;
 import net.minecraft.client.Minecraft;
@@ -114,20 +115,33 @@ public class SpectatorMode {
 		}
 	}
 
+	private final Map<EntityPlayer, Boolean> prevIsSpecClient = new WeakHashMap<>();
+	private final Map<EntityPlayer, Boolean> prevIsSpecServer = new WeakHashMap<>();
+
 	@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
 		if (event.phase == TickEvent.Phase.START) {
+			/*
+			 * We need to create this so the client and server have separate maps, so the code below runs fully on the client and server and does not desync
+			 * Otherwise the state isn't set on the server and noClip/setInvisible etc only gets set on the client
+			 * Not sure how, I think somehow the client and server have the EXACT same player instances.
+			 */
+			Map<EntityPlayer, Boolean> prevIsSpec = event.side == Side.SERVER ? prevIsSpecServer : prevIsSpecClient;
+
 			boolean isSpec = isSpectator(event.player);
-			if (!isSpec && event.player.noClip) {
+			if (isSpec) {
+				//Manage these states while in spectator since we want these states to be forced to specific values in spectator.
+				event.player.noClip = true;
+				event.player.onGround = false;
+				event.player.setInvisible(true);
+			} else if (prevIsSpec.getOrDefault(event.player, false)) {
+				//Do it this way so we don't manage these states for non-spectators, so mods can change it freely.
+				event.player.noClip = false;
 				event.player.setInvisible(false);
 				SPECTATING_ENTITIES.remove(event.player);
 			}
-			event.player.noClip = isSpec;
-			/* reuse value for spectator check */
-			if (isSpec) {
-				event.player.onGround = false;
-				event.player.setInvisible(true);
-			}
+
+			prevIsSpec.put(event.player, isSpec);
 
 			Entity entityToSpectate = SPECTATING_ENTITIES.get(event.player);
 			if (entityToSpectate != null) {

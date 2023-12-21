@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class GuiShulkerBox extends GuiContainer {
 
-	private static final ResourceLocation[] backgrounds = Arrays.stream(TileEntityShulkerBox.ShulkerBoxType.values())
+	private static final ResourceLocation[] backgrounds = Arrays.stream(ShulkerBoxType.VALUES)
 			.map(t -> t.getGuiTextureName() == null ? new ResourceLocation("textures/gui/container/generic_54.png") :
 					new ResourceLocation(String.format("etfuturum:textures/gui/container/ironshulkerbox/%s.png", t.getGuiTextureName())))
 			.toArray(ResourceLocation[]::new);

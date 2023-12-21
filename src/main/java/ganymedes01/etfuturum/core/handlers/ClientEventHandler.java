@@ -53,8 +53,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.particle.EntityDiggingFX;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
@@ -63,7 +63,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProviderHell;
@@ -152,7 +151,7 @@ public class ClientEventHandler {
 		}
 
 		if (player.ticksExisted == 40) {
-			if (!EtFuturum.DEV_ENVIRONMENT && EtFuturum.SNAPSHOT_BUILD && !showedDebugWarning) {
+			if (!Reference.DEV_ENVIRONMENT && Reference.SNAPSHOT_BUILD && !showedDebugWarning) {
 				if (!forceHideSnapshotWarning) {
 					ChatComponentText text = new ChatComponentText(I18n.format("efr.warn.prerelease.version"));
 					text.getChatStyle().setChatClickEvent(new ClickEvent(Action.OPEN_URL, "https://github.com/Roadhog360/Et-Futurum-Requiem/issues"));
@@ -198,6 +197,8 @@ public class ClientEventHandler {
 				handleNetherAmbienceLoop();
 				prevAmbientBiome = currentBiome;
 			}
+		} else {
+			netherAmbienceLoop = null;
 		}
 
 		if (ConfigFunctions.enableGamemodeSwitcher && Keyboard.isCreated() && Keyboard.isKeyDown(Keyboard.KEY_F3) && Keyboard.isKeyDown(Keyboard.KEY_F4)) {

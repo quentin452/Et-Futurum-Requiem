@@ -1,9 +1,9 @@
 package ganymedes01.etfuturum.tileentities;
 
 import com.google.common.collect.Lists;
-import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.blocks.BlockBeeHive;
-import ganymedes01.etfuturum.core.utils.ExternalContent;
+import ganymedes01.etfuturum.compat.ExternalContent;
+import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.core.utils.helpers.BlockPos;
 import ganymedes01.etfuturum.entities.EntityBee;
 import ganymedes01.etfuturum.lib.Reference;
@@ -108,7 +108,7 @@ public class TileEntityBeeHive extends TileEntity {
 
 	public static boolean isLitCampfireBelow(World world, int x, int y, int z, int spacing) {
 		List<Block> fires = Lists.newArrayList();
-		if (EtFuturum.hasCampfireBackport) {
+		if (ModsList.CAMPFIRE_BACKPORT.isLoaded()) {
 			fires.add(ExternalContent.Blocks.CFB_CAMPFIRE.get());
 			fires.add(ExternalContent.Blocks.CFB_SOUL_CAMPFIRE.get());
 		}

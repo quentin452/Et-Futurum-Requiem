@@ -2,7 +2,7 @@ package ganymedes01.etfuturum.client;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ganymedes01.etfuturum.lib.EnumColour;
+import ganymedes01.etfuturum.lib.EnumColor;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -28,9 +28,9 @@ public class LayeredColorMaskTexture extends AbstractTexture {
 	 */
 	private final ResourceLocation textureLocation;
 	private final List<String> field_174949_h;
-	private final List<EnumColour> field_174950_i;
+	private final List<EnumColor> field_174950_i;
 
-	public LayeredColorMaskTexture(ResourceLocation textureLocationIn, List<String> p_i46101_2_, List<EnumColour> p_i46101_3_) {
+	public LayeredColorMaskTexture(ResourceLocation textureLocationIn, List<String> p_i46101_2_, List<EnumColor> p_i46101_3_) {
 		textureLocation = textureLocationIn;
 		field_174949_h = p_i46101_2_;
 		field_174950_i = p_i46101_3_;

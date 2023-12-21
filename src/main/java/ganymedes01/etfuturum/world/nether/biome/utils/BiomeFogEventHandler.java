@@ -1,7 +1,7 @@
 package ganymedes01.etfuturum.world.nether.biome.utils;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import ganymedes01.etfuturum.EtFuturum;
+import ganymedes01.etfuturum.world.nether.biome.NetherBiomeBase;
 import ganymedes01.etfuturum.world.nether.dimension.WorldProviderEFRNether;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.common.ForgeModContainer;
-import org.lwjgl.opengl.GL11;
 
 public class BiomeFogEventHandler {
 
@@ -98,9 +97,8 @@ public class BiomeFogEventHandler {
 		for (int x = -distance; x <= distance; ++x) {
 			for (int z = -distance; z <= distance; ++z) {
 				final BiomeGenBase biome = world.getBiomeGenForCoords(playerX + x, playerZ + z);
-				if (biome instanceof IBiomeColor) {
-					final IBiomeColor biomeFog = (IBiomeColor) biome;
-					final int fogColour = biomeFog.getBiomeColour(playerX + x, playerY, playerZ + z);
+				if (biome instanceof NetherBiomeBase) {
+					final int fogColour = ((NetherBiomeBase) biome).fogSkyColor;
 					float rPart = (float) ((fogColour & 0xFF0000) >> 16);
 					float gPart = (float) ((fogColour & 0xFF00) >> 8);
 					float bPart = (float) (fogColour & 0xFF);

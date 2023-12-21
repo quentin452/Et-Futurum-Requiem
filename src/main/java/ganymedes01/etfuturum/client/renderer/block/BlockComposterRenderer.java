@@ -61,13 +61,13 @@ public class BlockComposterRenderer extends BlockModelBase {
 			if (!renderer.hasOverrideBlockTexture()) {
 				if (meta == 0) {
 					renderer.setOverrideBlockTexture(ModBlocks.COMPOSTER.get().getIcon(0, 0));
-				} else if (meta == 7) {
+				} else if (meta == BlockComposter.HARVESTABLE_META) {
 					renderer.setOverrideBlockTexture(((BlockComposter) block).fullCompostIcon);
 				} else {
 					renderer.setOverrideBlockTexture(((BlockComposter) block).compostIcon);
 				}
 
-				double offset = 0.125D * Math.min(meta + 1, 7);
+				double offset = 0.125D * Math.min(meta, BlockComposter.FULL_META);
 				if (meta > 0) {
 					offset += 0.0625D;
 				}

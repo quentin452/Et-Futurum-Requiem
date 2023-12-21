@@ -3,7 +3,7 @@ package ganymedes01.etfuturum.ducks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ganymedes01.etfuturum.ModBlocks;
-import ganymedes01.etfuturum.core.utils.ExternalContent;
+import ganymedes01.etfuturum.compat.ExternalContent;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;

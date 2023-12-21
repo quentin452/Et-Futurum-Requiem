@@ -1,29 +1,18 @@
 package ganymedes01.etfuturum.world.nether.biome;
 
 import ganymedes01.etfuturum.world.nether.biome.decorator.NetherBiomeDecorator;
-import ganymedes01.etfuturum.world.nether.biome.utils.IBiomeColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityMagmaCube;
-import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.gen.feature.WorldGenGlowStone1;
-import net.minecraft.world.gen.feature.WorldGenGlowStone2;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.event.terraingen.TerrainGen;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.GLOWSTONE;
+public class NetherBiomeBase extends BiomeGenBase {
 
-public class NetherBiomeBase extends BiomeGenBase implements IBiomeColor {
-
-	protected int fogSkyColor;
+	public int fogSkyColor;
 	private final NetherBiomeDecorator decorator;
 
 	public NetherBiomeBase(int id, NetherBiomeDecorator decorator) {
@@ -50,12 +39,6 @@ public class NetherBiomeBase extends BiomeGenBase implements IBiomeColor {
 	@Override
 	public void decorate(World world, Random rand, int x, int z) {
 		decorator.decorate(world, rand, x, z);
-	}
-
-
-	@Override
-	public int getBiomeColour(int i, int playerY, int j) {
-		return this.fogSkyColor;
 	}
 
 	@Override

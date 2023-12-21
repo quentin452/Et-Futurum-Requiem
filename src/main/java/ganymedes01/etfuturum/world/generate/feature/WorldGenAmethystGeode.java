@@ -148,7 +148,7 @@ public class WorldGenAmethystGeode extends WorldGenerator {
 					for (BlockPos pos : list3) {
 						blockPos6 = pos;
 						block2 = Utils.getRandom(budBlocks, random);
-						EnumFacing[] var53 = EnumFacing.values();
+						EnumFacing[] var53 = Utils.ENUM_FACING_VALUES;
 
 						for (EnumFacing direction2 : var53) {
 							BlockPos blockPos7 = blockPos6.offset(direction2);

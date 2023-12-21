@@ -24,7 +24,7 @@ public class DispenserBehaviourShulkerBox extends BehaviorDefaultDispenseItem {
 			TileEntityShulkerBox box = (TileEntityShulkerBox) coords.getWorld().getTileEntity(x, y, z);
 			box.facing = enumfacing != EnumFacing.UP && coords.getWorld().getBlock(x, y - 1, z) == Blocks.air ? (byte) enumfacing.ordinal() : 1;
 			if (stack.hasTagCompound()) {
-				box.type = TileEntityShulkerBox.ShulkerBoxType.values()[stack.getTagCompound().getByte("Type")];
+				box.type = TileEntityShulkerBox.ShulkerBoxType.VALUES[stack.getTagCompound().getByte("Type")];
 
 				NBTTagList nbttaglist = stack.getTagCompound().getTagList("Items", 10);
 				box.chestContents = new ItemStack[box.getSizeInventory()];

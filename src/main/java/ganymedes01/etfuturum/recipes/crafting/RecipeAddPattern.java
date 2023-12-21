@@ -3,7 +3,7 @@ package ganymedes01.etfuturum.recipes.crafting;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.blocks.itemblocks.ItemBlockBanner;
 import ganymedes01.etfuturum.core.utils.Utils;
-import ganymedes01.etfuturum.lib.EnumColour;
+import ganymedes01.etfuturum.lib.EnumColor;
 import ganymedes01.etfuturum.tileentities.TileEntityBanner;
 import ganymedes01.etfuturum.tileentities.TileEntityBanner.EnumBannerPattern;
 import net.minecraft.inventory.InventoryCrafting;
@@ -94,7 +94,7 @@ public class RecipeAddPattern implements IRecipe {
 
 	private boolean isDye(ItemStack stack) {
 		for (String ore : Utils.getOreNames(stack))
-			for (EnumColour colour : EnumColour.values())
+			for (EnumColor colour : EnumColor.VALUES)
 				if (ore.equals(colour.getOreName()))
 					return true;
 
@@ -103,7 +103,7 @@ public class RecipeAddPattern implements IRecipe {
 
 	private int getDyeIndex(ItemStack stack) {
 		for (String ore : Utils.getOreNames(stack))
-			for (EnumColour colour : EnumColour.values())
+			for (EnumColor colour : EnumColor.VALUES)
 				if (ore.equals(colour.getOreName()))
 					return colour.getDamage();
 
@@ -111,7 +111,7 @@ public class RecipeAddPattern implements IRecipe {
 	}
 
 	private EnumBannerPattern getPattern(InventoryCrafting grid) {
-		for (EnumBannerPattern pattern : EnumBannerPattern.values())
+		for (EnumBannerPattern pattern : EnumBannerPattern.VALUES)
 			if (pattern.hasValidCrafting()) {
 				boolean flag = true;
 

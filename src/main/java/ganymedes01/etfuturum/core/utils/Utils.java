@@ -13,12 +13,23 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
 
 public class Utils {
 
+	/**
+	 * Note: Includes UNKNOWN, use ForgeDirection.VALID_DIRECTIONS to exclude it
+	 */
+	public static final ForgeDirection[] FORGE_DIRECTIONS = ForgeDirection.values();
+	public static final ForgeDirection[] HORIZONTAL_FORGE_DIRECTIONS = new ForgeDirection[]{ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.EAST};
+	public static final EnumFacing[] ENUM_FACING_VALUES = EnumFacing.values();
+	public static final EnumFacing[] HORIZONTAL_ENUM_FACING = new EnumFacing[]{EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST};
 	public static final float SQRT_2 = MathHelper.sqrt_float(2.0F);
 
 	public static String getUnlocalisedName(String name) {
@@ -408,5 +419,32 @@ public class Utils {
 			}
 		}
 		return Objects.equals(betterFpsAlgo, "rivens-half") || Objects.equals(betterFpsAlgo, "taylors");
+	}
+
+	/**
+	 * @return Hash of the position, replaces a similar method from modern. It's almost certainly not exactly
+	 * equivalent, but I'll be very concerned if it matters
+	 */
+	public static long hashPos(int x, int y, int z) {
+		return cantor(x, cantor(y, z));
+	}
+
+	/**
+	 * Maps every positive a and b to a unique int, barring overflow
+	 * <a href="https://stackoverflow.com/a/73089718">Source on Stack Overflow</a>
+	 */
+	public static long cantor(long a, long b) {
+		return (a + b + 1) * (a + b) / 2 + b;
+	}
+
+	public static BiomeGenBase[] excludeBiomesFromTypesWithDefaults(BiomeGenBase[] list, BiomeDictionary.Type... typesBlacklist) {
+		return excludeBiomesFromTypes(list, ArrayUtils.addAll(typesBlacklist, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.END, BiomeDictionary.Type.DEAD, BiomeDictionary.Type.SPOOKY, BiomeDictionary.Type.WASTELAND));
+	}
+
+	public static BiomeGenBase[] excludeBiomesFromTypes(BiomeGenBase[] list, BiomeDictionary.Type... typesBlacklist) {
+		for (BiomeDictionary.Type typeToBlacklist : typesBlacklist) {
+			list = ArrayUtils.removeElements(list, BiomeDictionary.getBiomesForType(typeToBlacklist));
+		}
+		return list;
 	}
 }

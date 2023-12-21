@@ -18,7 +18,9 @@ import java.util.List;
 public class BlockModdedDeepslateOre extends BaseSubtypesBlock {
 
 	public static final String[] names = new String[]{"deepslate_aluminum_ore", "deepslate_tin_ore", "deepslate_silver_ore", "deepslate_lead_ore", "deepslate_nickel_ore",
-			"deepslate_platinum_ore", "deepslate_mythril_ore", "deepslate_uranium_ore", "deepslate_thorium_ore", "deepslate_tungsten_ore", "deepslate_titanium_ore"};
+			"deepslate_platinum_ore", "deepslate_mythril_ore", "deepslate_uranium_ore", "deepslate_thorium_ore", "deepslate_tungsten_ore", "deepslate_titanium_ore",
+			"deepslate_zinc_ore", "deepslate_magnesium_ore", "deepslate_boron_ore"};
+
 	public static final String[] ores = new String[names.length];
 
 	static {

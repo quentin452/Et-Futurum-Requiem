@@ -96,6 +96,11 @@ public class CustomParticles {
 		return spawnParticle(world, particle);
 	}
 
+	public static EntityFX spawnCherryLeaf(World world, double x, double y, double z) {
+		EntityFX particle = new CherryLeafFX(world, x, y, z);
+		return spawnParticle(world, particle);
+	}
+
 	protected static EntityFX spawnParticle(World world, EntityFX entityFX) {
 		if (world.isRemote) {
 			Minecraft.getMinecraft().effectRenderer.addEffect(entityFX);

@@ -147,7 +147,7 @@ public class CommonProxy implements IGuiHandler {
 				//change spawn weights
 				EntityRegistry.removeSpawn(EntityZombie.class, EnumCreatureType.monster, biomeArray);
 
-				EntityRegistry.addSpawn(EntityZombie.class, 19, 4, 4, EnumCreatureType.monster, biomeArray);
+				EntityRegistry.addSpawn(EntityZombie.class, 20, 4, 4, EnumCreatureType.monster, biomeArray);
 				EntityRegistry.addSpawn(EntityHusk.class, 80, 4, 4, EnumCreatureType.monster, biomeArray);
 			}
 		}

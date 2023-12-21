@@ -56,7 +56,7 @@ public class NEIEtFuturumConfig implements IConfigureNEI {
 			API.addItemListEntry(firework);
 		}
 
-		for (ModBlocks mb : ModBlocks.values()) {
+		for (ModBlocks mb : ModBlocks.VALUES) {
 			if (mb.isEnabled() && mb.get() instanceof BlockSlab && mb.name().toLowerCase().contains("double")) {
 				API.hideItem(mb.newItemStack(1, OreDictionary.WILDCARD_VALUE));
 			}

@@ -2,6 +2,7 @@ package ganymedes01.etfuturum.world.generate;
 
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.configuration.configs.ConfigWorld;
+import ganymedes01.etfuturum.core.utils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -99,7 +100,7 @@ public class WorldGenMinableCustom extends WorldGenMinable {
 		if (!block.isReplaceableOreGen(world, x, y, z, field_150518_c)) return false;
 
 		if (!shouldAirGen) {
-			for (EnumFacing facing : EnumFacing.values()) {
+			for (EnumFacing facing : Utils.ENUM_FACING_VALUES) {
 				if (world.isAirBlock(x + facing.getFrontOffsetX(), y + facing.getFrontOffsetY(), z + facing.getFrontOffsetZ())) {
 					return false;
 				}

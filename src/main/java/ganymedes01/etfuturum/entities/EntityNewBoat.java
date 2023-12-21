@@ -1015,7 +1015,7 @@ public class EntityNewBoat extends Entity {
 	}
 
 	public void setBoatType(EntityNewBoat.Type boatType) {
-		getDataWatcher().updateObject(20, Integer.valueOf(boatType.ordinal()));
+		getDataWatcher().updateObject(20, boatType.ordinal());
 	}
 
 	public EntityNewBoat.Type getBoatType() {
@@ -1053,6 +1053,8 @@ public class EntityNewBoat extends Entity {
 		ACACIA(4, "acacia"),
 		DARK_OAK(5, "dark_oak");
 
+		public static final Type[] VALUES = values();
+
 		private final String name;
 		private final int metadata;
 
@@ -1074,17 +1076,17 @@ public class EntityNewBoat extends Entity {
 		}
 
 		public static EntityNewBoat.Type byId(int id) {
-			return values()[MathHelper.clamp_int(id, 0, values().length - 1)];
+			return VALUES[MathHelper.clamp_int(id, 0, VALUES.length - 1)];
 		}
 
 		public static EntityNewBoat.Type getTypeFromString(String nameIn) {
-			for (int i = 0; i < values().length; ++i) {
-				if (values()[i].getName().equals(nameIn)) {
-					return values()[i];
+			for (Type value : VALUES) {
+				if (value.getName().equals(nameIn)) {
+					return value;
 				}
 			}
 
-			return values()[0];
+			return VALUES[0];
 		}
 	}
 }

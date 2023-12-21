@@ -26,7 +26,7 @@ public class ItemSkullRenderer implements IItemRenderer {
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack stack, Object... data) {
-		GameProfile profile = stack.hasTagCompound() ? profile = getGameProfile(stack) : null;
+		GameProfile profile = stack.hasTagCompound() ? getGameProfile(stack) : null;
 
 		switch (type) {
 			case ENTITY:

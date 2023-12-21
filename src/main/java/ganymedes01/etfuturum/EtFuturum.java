@@ -1,6 +1,5 @@
 package ganymedes01.etfuturum;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -23,13 +22,11 @@ import ganymedes01.etfuturum.client.DynamicSoundsResourcePack;
 import ganymedes01.etfuturum.client.GrayscaleWaterResourcePack;
 import ganymedes01.etfuturum.client.sound.ModSounds;
 import ganymedes01.etfuturum.command.CommandFill;
-import ganymedes01.etfuturum.compat.CompatBaublesExpanded;
-import ganymedes01.etfuturum.compat.CompatCraftTweaker;
-import ganymedes01.etfuturum.compat.CompatThaumcraft;
-import ganymedes01.etfuturum.compat.CompatWaila;
+import ganymedes01.etfuturum.compat.*;
 import ganymedes01.etfuturum.compat.nei.IMCSenderGTNH;
 import ganymedes01.etfuturum.configuration.ConfigBase;
 import ganymedes01.etfuturum.configuration.configs.*;
+import ganymedes01.etfuturum.core.handlers.WorldEventHandler;
 import ganymedes01.etfuturum.core.proxy.CommonProxy;
 import ganymedes01.etfuturum.entities.ModEntityList;
 import ganymedes01.etfuturum.items.ItemWoodSign;
@@ -58,7 +55,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -154,11 +150,6 @@ public class EtFuturum {
 		}
 	};
 
-	public static final boolean TESTING = Boolean.parseBoolean(System.getProperty("etfuturum.testing"));
-	public static final boolean DEV_ENVIRONMENT = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
-	public static boolean SNAPSHOT_BUILD = false;
-	private static Side effectiveSide;
-
 	static final Map<ItemStack, Integer> DEFAULT_COMPOST_CHANCES = new LinkedHashMap<>();
 
 	@EventHandler
@@ -174,34 +165,6 @@ public class EtFuturum {
 
 	static final String NETHER_FORTRESS = "netherFortress";
 	private Field fortressWeightedField;
-
-	public static final boolean hasEnderlicious = Loader.isModLoaded("enderlicious");
-	public static final boolean hasIronChest = Loader.isModLoaded("IronChest");
-	public static final boolean hasNetherlicious = Loader.isModLoaded("netherlicious");
-	public static final boolean hasAetherLegacy = Loader.isModLoaded("aether_legacy");
-	public static final boolean hasWaila = Loader.isModLoaded("Waila");
-	public static final boolean hasThaumcraft = Loader.isModLoaded("Thaumcraft");
-	public static final boolean hasBluePower = Loader.isModLoaded("bluepower");
-	public static final boolean hasNP = Loader.isModLoaded("netheriteplus");
-	public static final boolean hasBotania = Loader.isModLoaded("Botania");
-	public static final boolean hasHEE = Loader.isModLoaded("HardcoreEnderExpansion");
-	public static final boolean hasIC2 = Loader.isModLoaded("IC2");
-	public static final boolean hasSkinPort = Loader.isModLoaded("skinport");
-	public static final boolean hasEars = Loader.isModLoaded("ears");
-	public static final boolean hasBaubles = Loader.isModLoaded("Baubles");
-	public static final boolean hasBaublesExpanded = Loader.isModLoaded("Baubles|Expanded");
-	public static final boolean hasMineTweaker = Loader.isModLoaded("MineTweaker3");
-	public static final boolean hasTConstruct = Loader.isModLoaded("TConstruct");
-	public static final boolean hasNatura = Loader.isModLoaded("Natura");
-	public static final boolean hasCampfireBackport = Loader.isModLoaded("campfirebackport");
-	public static final boolean hasBackInSlime = Loader.isModLoaded("bis");
-	public static final boolean hasMineFactory = Loader.isModLoaded("MineFactoryReloaded");
-	public static final boolean hasFoamFix = Loader.isModLoaded("foamfix");
-	public static final boolean hasMorePlayerModels = Loader.isModLoaded("moreplayermodels");
-	public static final boolean hasDragonBlockC = Loader.isModLoaded("jinryuudragonblockc");
-	public static final boolean hasBiomesOPlenty = Loader.isModLoaded("BiomesOPlenty");
-	public static final boolean hasExtraUtils = Loader.isModLoaded("ExtraUtilities");
-	public static final boolean hasAE2 = Loader.isModLoaded("appliedenergistics2");
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -263,7 +226,7 @@ public class EtFuturum {
 		event.getModMetadata().name = "\u00a75\u00a7o" + Reference.MOD_NAME; // name 
 
 		String buildVer = Reference.BUILD_VERSION = event.getModMetadata().version;
-		SNAPSHOT_BUILD = buildVer.toLowerCase().contains("snapshot") || buildVer.contains("alpha") || buildVer.toLowerCase().contains("beta") || buildVer.toLowerCase().contains("rc");
+		Reference.SNAPSHOT_BUILD = buildVer.toLowerCase().contains("snapshot") || buildVer.contains("alpha") || buildVer.toLowerCase().contains("beta") || buildVer.toLowerCase().contains("rc");
 		event.getModMetadata().version = "\u00a7e" + event.getModMetadata().version; // version (read from mcmod.info)
 
 		event.getModMetadata().credits = Reference.CREDITS; // credits 
@@ -278,14 +241,14 @@ public class EtFuturum {
 
 		event.getModMetadata().logoFile = Reference.LOGO_FILE;
 
-		if (ConfigModCompat.elytraBaublesExpandedCompat > 0 && hasBaublesExpanded) {
+		if (ConfigModCompat.elytraBaublesExpandedCompat > 0 && ModsList.BAUBLES_EXPANDED.isLoaded()) {
 			CompatBaublesExpanded.preInit();
 		}
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		if (EtFuturum.hasWaila) {
+		if (ModsList.WAILA.isLoaded()) {
 			CompatWaila.register();
 		}
 
@@ -293,6 +256,22 @@ public class EtFuturum {
 		proxy.registerEntities();
 		proxy.registerRenderers();
 		IMCSenderGTNH.IMCSender();
+
+		if (ModsList.MULTIPART.isLoaded()) {
+			int[] metaSideMap = new int[]{0, 4, 5, 2, 3, 1, -1, -1};
+			int[] sideMetaMap = new int[]{0, 5, 3, 4, 1, 2};
+
+			try {
+				Class button = ReflectionHelper.getClass(getClass().getClassLoader(), "codechicken.multipart.minecraft.ButtonPart");
+				Field metaSideMapField = ReflectionHelper.findField(button, "metaSideMap");
+				metaSideMapField.setAccessible(true);
+				metaSideMapField.set(null, metaSideMap);
+				Field sideMetaMapField = ReflectionHelper.findField(button, "sideMetaMap");
+				sideMetaMapField.setAccessible(true);
+				sideMetaMapField.set(null, sideMetaMap);
+			} catch (Exception ignored) {
+			}
+		}
 	}
 
 	@EventHandler
@@ -324,11 +303,11 @@ public class EtFuturum {
 			BlockTrapDoor.disableValidation = true;
 		}
 
-		if (EtFuturum.hasThaumcraft) {
+		if (ModsList.THAUMCRAFT.isLoaded()) {
 			CompatThaumcraft.doAspects();
 		}
 
-		if (EtFuturum.hasMineTweaker) {
+		if (ModsList.MINETWEAKER_3.isLoaded()) {
 			CompatCraftTweaker.onPostInit();
 		}
 
@@ -363,7 +342,7 @@ public class EtFuturum {
 			}
 		}
 
-		if (ConfigBlocksItems.enableSmoothStone && EtFuturum.hasBluePower) {
+		if (ConfigBlocksItems.enableSmoothStone && ModsList.BLUEPOWER.isLoaded()) {
 			Item stoneTile = GameRegistry.findItem("bluepower", "stone_tile");
 			if (stoneTile != null) {
 				Item stoneItem = Item.getItemFromBlock(Blocks.stone);
@@ -371,7 +350,7 @@ public class EtFuturum {
 			}
 		}
 
-		if (ConfigModCompat.elytraBaublesExpandedCompat > 0 && hasBaublesExpanded) {
+		if (ConfigModCompat.elytraBaublesExpandedCompat > 0 && ModsList.BAUBLES_EXPANDED.isLoaded()) {
 			CompatBaublesExpanded.postInit();
 		}
 
@@ -389,19 +368,19 @@ public class EtFuturum {
 
 	@EventHandler
 	public void onLoadComplete(FMLLoadCompleteEvent e) {
-
 		ConfigBase.postInit();
 
 		EtFuturumWorldGenerator.INSTANCE.postInit();
+		WorldEventHandler.INSTANCE.postInit();
 
 		if (ConfigSounds.newBlockSounds) {
 			//Because NP+ uses its own (worse) step sounds for this and it causes the check below that replaces these blocks to fail.
-			if (EtFuturum.hasNP) {
+			if (ModsList.NETHERITEPLUS.isLoaded()) {
 				Blocks.nether_brick.setStepSound(ModSounds.soundNetherBricks);
 				Blocks.nether_brick_fence.setStepSound(ModSounds.soundNetherBricks);
 				Blocks.nether_brick_stairs.setStepSound(ModSounds.soundNetherBricks);
 			}
-			if (EtFuturum.hasNatura) {
+			if (ModsList.NATURA.isLoaded()) {
 				Block block = GameRegistry.findBlock("Natura", "NetherFurnace");
 				if (block != null) {
 					block.setStepSound(ModSounds.soundNetherrack);
@@ -435,6 +414,10 @@ public class EtFuturum {
 			Blocks.bed.blockMaterial = Material.wood;
 			Blocks.bed.setStepSound(Block.soundTypeWood);
 		}
+		Block saltOre = GameRegistry.findBlock("SaltMod", "saltDeepslateOre");
+		if (saltOre != null) {
+			saltOre.setStepSound(ModSounds.soundDeepslate);
+		}
 
 		//Block registry iterator
 		for (Block block : (Iterable<Block>) Block.blockRegistry) {
@@ -462,11 +445,11 @@ public class EtFuturum {
 			}
 		}
 
-		if (ConfigWorld.netherDimensionProvider && !hasNetherlicious) {
+		if (ConfigWorld.netherDimensionProvider && !ModsList.NETHERLICIOUS.isLoaded()) {
 			DimensionProviderEFRNether.init();
 		}
 
-		if (TESTING) {
+		if (Reference.TESTING) {
 			DimensionProviderEFREnd.init(); // Come back to
 		}
 	}
@@ -480,7 +463,7 @@ public class EtFuturum {
 			MultiBlockSoundRegistry.multiBlockSounds.put(Blocks.double_stone_slab, mbs);
 		}
 
-		if (EtFuturum.hasTConstruct) {
+		if (ModsList.TINKERS_CONSTRUCT.isLoaded()) {
 			{
 				BasicMultiBlockSound mbs = new BasicMultiBlockSound();
 				mbs.setTypes(2, ModSounds.soundNetherrack);
@@ -546,50 +529,57 @@ public class EtFuturum {
 			MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.SPONGE.get(), mbs);
 		}
 
-		if (ModBlocks.WOOD_PLANKS.isEnabled()) {
+		if (ModBlocks.SAPLING.isEnabled()) {
+			BasicMultiBlockSound mbs = new BasicMultiBlockSound();
+			mbs.setTypes(1, ModSounds.soundCherrySapling);
+			mbs.setTypes(9, ModSounds.soundCherrySapling);
+			MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.SAPLING.get(), mbs);
+		}
+
+		if (ModBlocks.LEAVES.isEnabled()) {
+			BasicMultiBlockSound mbs = new BasicMultiBlockSound();
+			mbs.setTypes(1, ModSounds.soundCherryLeaves);
+			mbs.setTypes(5, ModSounds.soundCherryLeaves);
+			mbs.setTypes(9, ModSounds.soundCherryLeaves);
+			mbs.setTypes(13, ModSounds.soundCherryLeaves);
+			MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.LEAVES.get(), mbs);
+		}
+
+		{
 			BasicMultiBlockSound mbs = new BasicMultiBlockSound();
 			mbs.setTypes(0, ModSounds.soundNetherWood);
 			mbs.setTypes(1, ModSounds.soundNetherWood);
 			mbs.setTypes(3, ModSounds.soundCherryWood);
 			mbs.setTypes(4, ModSounds.soundBambooWood);
-			MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.WOOD_PLANKS.get(), mbs);
+
+			if (ModBlocks.WOOD_PLANKS.isEnabled()) {
+				MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.WOOD_PLANKS.get(), mbs);
+			}
+
+			if (ModBlocks.WOOD_FENCE.isEnabled()) {
+				MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.WOOD_FENCE.get(), mbs);
+			}
 		}
 
-		if (ModBlocks.WOOD_FENCE.isEnabled()) {
+		{
 			BasicMultiBlockSound mbs = new BasicMultiBlockSound();
 			mbs.setTypes(0, ModSounds.soundNetherWood);
 			mbs.setTypes(1, ModSounds.soundNetherWood);
 			mbs.setTypes(3, ModSounds.soundCherryWood);
-			mbs.setTypes(4, ModSounds.soundBambooWood);
-			MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.WOOD_FENCE.get(), mbs);
-		}
-
-		if (ModBlocks.WOOD_SLAB.isEnabled()) {
-			BasicMultiBlockSound mbs = new BasicMultiBlockSound();
-			mbs.setTypes(0, ModSounds.soundNetherWood);
-			mbs.setTypes(1, ModSounds.soundNetherWood);
-			mbs.setTypes(3, ModSounds.soundNetherWood);
 			mbs.setTypes(4, ModSounds.soundBambooWood);
 
 			mbs.setTypes(8, ModSounds.soundNetherWood);
 			mbs.setTypes(9, ModSounds.soundNetherWood);
 			mbs.setTypes(11, ModSounds.soundCherryWood);
 			mbs.setTypes(12, ModSounds.soundBambooWood);
-			MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.WOOD_SLAB.get(), mbs);
-		}
 
-		if (ModBlocks.DOUBLE_WOOD_SLAB.isEnabled()) {
-			BasicMultiBlockSound mbs = new BasicMultiBlockSound();
-			mbs.setTypes(0, ModSounds.soundNetherWood);
-			mbs.setTypes(1, ModSounds.soundNetherWood);
-			mbs.setTypes(3, ModSounds.soundCherryWood);
-			mbs.setTypes(4, ModSounds.soundBambooWood);
+			if (ModBlocks.WOOD_SLAB.isEnabled()) {
+				MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.WOOD_SLAB.get(), mbs);
+			}
 
-			mbs.setTypes(8, ModSounds.soundNetherWood);
-			mbs.setTypes(9, ModSounds.soundNetherWood);
-			mbs.setTypes(11, ModSounds.soundCherryWood);
-			mbs.setTypes(12, ModSounds.soundBambooWood);
-			MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.DOUBLE_WOOD_SLAB.get(), mbs);
+			if (ModBlocks.DOUBLE_WOOD_SLAB.isEnabled()) {
+				MultiBlockSoundRegistry.multiBlockSounds.put(ModBlocks.DOUBLE_WOOD_SLAB.get(), mbs);
+			}
 		}
 
 		if (ModBlocks.PACKED_MUD.isEnabled()) {
@@ -631,9 +621,7 @@ public class EtFuturum {
 
 
 	public SoundType getCustomStepSound(Block block, String namespace) {
-
 		if (block.stepSound == Block.soundTypePiston || block.stepSound == Block.soundTypeStone) {
-
 			if (namespace.contains("nether") && namespace.contains("brick")) {
 				return ModSounds.soundNetherBricks;
 			} else if (namespace.contains("netherrack") || namespace.contains("hellfish")) {

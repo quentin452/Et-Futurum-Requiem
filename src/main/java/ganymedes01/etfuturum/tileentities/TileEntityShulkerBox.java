@@ -71,7 +71,7 @@ public class TileEntityShulkerBox extends TileEntity implements IInventory {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		this.type = ConfigModCompat.shulkerBoxesIronChest ? ShulkerBoxType.values()[nbt.getByte("Type")] : ShulkerBoxType.VANILLA;
+		this.type = ConfigModCompat.shulkerBoxesIronChest ? ShulkerBoxType.VALUES[nbt.getByte("Type")] : ShulkerBoxType.VANILLA;
 
 		if (this.chestContents == null || this.chestContents.length != this.getSizeInventory()) {
 			this.chestContents = new ItemStack[this.getSizeInventory()];
@@ -561,6 +561,8 @@ public class TileEntityShulkerBox extends TileEntity implements IInventory {
 		SILVER(72, 9, false, 184, 238, "silvercontainer"),
 		CRYSTAL(108, 12, true, 238, 256, "diamondcontainer"),
 		OBSIDIAN(108, 12, false, 238, 256, "diamondcontainer");
+
+		public static final ShulkerBoxType[] VALUES = values();
 
 		private final int size;
 		private final int rowSize;

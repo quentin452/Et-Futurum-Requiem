@@ -2,6 +2,7 @@ package ganymedes01.etfuturum.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ganymedes01.etfuturum.client.sound.ModSounds;
 import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
 import ganymedes01.etfuturum.core.utils.Utils;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -13,12 +14,13 @@ import net.minecraft.world.IBlockAccess;
 
 import java.util.List;
 
-public class BlockBambooBlock extends BlockModernLog implements ISubBlocksBlock {
+public class BlockBambooBlock extends BaseLog {
 
-	public BlockBambooBlock(String type, SoundType soundBambooWood) {
-		super(type, soundBambooWood);
+	public BlockBambooBlock(String type) {
+		super(type);
 		types = new String[]{type + "_block", "stripped_" + type + "_block"};
 		setBlockName(Utils.getUnlocalisedName(type + "_block"));
+		setBlockSound(ModSounds.soundBambooWood);
 	}
 
 	@Override
