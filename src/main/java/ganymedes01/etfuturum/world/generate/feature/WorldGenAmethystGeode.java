@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -80,6 +81,14 @@ public class WorldGenAmethystGeode extends WorldGenerator {
 	 * Some of them use a number provider to do .get to get a number in the range. If this would get two numbers I used nextBoolean() instead to be faster.
 	 */
 	public boolean generate(World world, Random random, int x, int y, int z) {
+		int chunkX = x >> 4;
+		int chunkZ = z >> 4;
+
+		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
+
+		if(!chunk.isChunkLoaded) {
+			return false;
+		}
 		BlockPos blockPos = new BlockPos(x, y, z);
 		List<Pair<BlockPos, Integer>> list = Lists.newLinkedList();
 		int distPoint = getRandom(distributionPoints, random);
