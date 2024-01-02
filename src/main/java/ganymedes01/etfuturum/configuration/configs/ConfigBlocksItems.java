@@ -1,6 +1,6 @@
 package ganymedes01.etfuturum.configuration.configs;
 
-import ganymedes01.etfuturum.compat.ModsList;
+import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.configuration.ConfigBase;
 import net.minecraftforge.common.config.Property;
 
@@ -193,7 +193,7 @@ public class ConfigBlocksItems extends ConfigBase {
 		enableCalcite = getBoolean("enableCalcite", catBlockNatural, true, "");
 		enableTuff = getBoolean("enableTuff", catBlockNatural, true, "");
 		enableDeepslateOres = getBoolean("enableDeepslateOres", catBlockNatural, true, "Enable deepslate ores for copper ore and vanilla ores when deepslate generates over them.");
-		enableAmethyst = getBoolean("enableAmethyst", catBlockNatural, true, "Enables tinted glass, amethyst blocks, budding amethyst and amethyst crystals. Also enables the item too.");
+		enableAmethyst = getBoolean("enableAmethyst", catBlockNatural, true, "Enables tinted glass, amethyst blocks, budding amethyst and amethyst crystals. Also enables the item too. Smooth basalt can be disabled by changing the world.cfg option for the basalt layer to something else.");
 		enableMud = getBoolean("enableMud", catBlockNatural, true, "Enables mud, packed mud and mud bricks, as well as the mud brick stairs, slabs and walls.");
 		enableMoss = getBoolean("enableMoss", catBlockNatural, true, "Enables moss blocks and carpets");
 		enableCrimsonBlocks = getBoolean("enableCrimsonBlocks", catBlockMisc, true, "Enables the crimson nylium, wood, and plants. This must be on for the crimson forest biome to generate unless Netherlicious is installed.\nThe nether wart block is still a separate toggle, both this and the wart toggle must be turned off to disable the nether wart block, because crimson trees need the wart blocks.");
@@ -218,9 +218,9 @@ public class ConfigBlocksItems extends ConfigBase {
 			enableCrimsonBlocks = enableWarpedBlocks = enableNetherwartBlock = enableBlackstone = enableSoulSoil = enableSoulLighting = enableBasalt = false;
 		}
 
-		enableMangroveBlocks = getBoolean("enableMangroveBlocks", catBlockNatural, true, "Enables mangrove wood and all of its wood subtypes, and the roots (+ muddy versions).");
+		enableMangroveBlocks = getBoolean("enableMangroveBlocks", catBlockNatural, true, "Enables mangrove wood and all of its wood subtypes, and muddy mangrove roots (if mud is enabled).");
 		enableCherryBlocks = getBoolean("enableCherryBlocks", catBlockNatural, true, "Enables cherry wood and all of its wood subtypes.");
-		enableBambooBlocks = getBoolean("enableBambooBlocks", catBlockNatural, true, "Enables bamboo wood and all of its wood subtypes, including the bamboo stalks themselves.");
+		enableBambooBlocks = getBoolean("enableBambooBlocks", catBlockNatural, true, "Enables bamboo wood and all of its wood subtypes.");
 
 		// Check if we enable wood variants at all
 		woodVariants = enableCrimsonBlocks || enableWarpedBlocks || enableMangroveBlocks || enableCherryBlocks || enableBambooBlocks;
@@ -359,7 +359,7 @@ public class ConfigBlocksItems extends ConfigBase {
 
 	@Override
 	protected void initValues() {
-		if (!ModsList.IRON_CHEST.isLoaded()) {
+		if (!EtFuturum.hasIronChest) {
 			ConfigModCompat.shulkerBoxesIronChest = false;
 		}
 	}

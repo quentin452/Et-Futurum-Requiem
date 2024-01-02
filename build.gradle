@@ -26,6 +26,7 @@ repositories {
 	}
 }
 
+
 apply plugin: 'forge'
 
 apply plugin: "com.github.johnrengelman.shadow"
@@ -89,6 +90,11 @@ targetCompatibility = 1.8
 compileJava.options.bootClasspath = org.gradle.internal.jvm.Jvm.current().getJre().getHomeDir().toString() +"/lib/rt.jar"
 compileJava {
 	options.encoding = "UTF-8"
+}
+
+configurations {
+    // By default only compileClasspath extends shadow, make runtime extend it too
+    compile.extendsFrom(shadow)
 }
 
 dependencies {
@@ -304,4 +310,10 @@ sourceSets {
 	main {
 		ext.refMap = refMapForYourConfig
 	}
+}
+
+runClient {
+    // Workaround for Mixin not detecting mod (https://github.com/SpongePowered/Mixin/issues/207)
+    // (Fixed in UniMix, so this should be removed if we ever switch to it.)
+    args("--mods=" + java.nio.file.Paths.get("$projectDir").resolve(minecraft.runDir).normalize().relativize(shadowJar.archivePath.toPath()))
 }

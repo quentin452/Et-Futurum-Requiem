@@ -5,9 +5,7 @@ import ganymedes01.etfuturum.blocks.*;
 import ganymedes01.etfuturum.blocks.itemblocks.*;
 import ganymedes01.etfuturum.blocks.ores.*;
 import ganymedes01.etfuturum.client.sound.ModSounds;
-import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.configs.*;
-import ganymedes01.etfuturum.lib.Reference;
 import ganymedes01.etfuturum.tileentities.TileEntityWoodSign;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -19,7 +17,7 @@ import net.minecraft.item.ItemStack;
 
 public enum ModBlocks {
 	STONE(ConfigBlocksItems.enableStones, new BlockBountifulStone()),
-	PRISMARINE_BLOCK(ConfigBlocksItems.enablePrismarine, new BaseSubtypesBlock(Material.rock, "prismarine", "prismarine_bricks", "dark_prismarine")
+	PRISMARINE_BLOCK(ConfigBlocksItems.enablePrismarine, new BaseSubtypesBlock(Material.rock, "prismarine$i", "prismarine_bricks", "dark_prismarine")
 			.setHardness(1.5F).setResistance(10.0F)),
 	SEA_LANTERN(ConfigBlocksItems.enablePrismarine, new BlockSeaLantern()),
 	DAYLIGHT_DETECTOR_INVERTED(ConfigBlocksItems.enableInvertedDaylightSensor, new BlockInvertedDaylightDetector(), null),
@@ -40,8 +38,8 @@ public enum ModBlocks {
 	CHORUS_FLOWER(ConfigBlocksItems.enableChorusFruit, new BlockChorusFlower()),
 	BONE(ConfigBlocksItems.enableBoneBlock, new BlockBone()),
 	RED_NETHERBRICK(ConfigBlocksItems.enableNewNetherBricks, new BlockNewNetherBrick()), //Also contains chiseled and cracked nether bricks
-	ANCIENT_DEBRIS(ConfigBlocksItems.enableNetherite, new BlockAncientDebris()),
-	NETHERITE_BLOCK(ConfigBlocksItems.enableNetherite, new BlockNetherite()),
+	ANCIENT_DEBRIS(ConfigBlocksItems.enableNetherite, new BlockAncientDebris(), ItemBlockUninflammable.class),
+	NETHERITE_BLOCK(ConfigBlocksItems.enableNetherite, new BlockNetherite(), ItemBlockUninflammable.class),
 	NETHER_GOLD_ORE(ConfigBlocksItems.enableNetherGold, new BlockOreNetherGold()),
 	BLUE_ICE(ConfigBlocksItems.enableBlueIce, new BlockBlueIce()),
 	SMOOTH_STONE(ConfigBlocksItems.enableSmoothStone, new BaseBlock(Material.rock).setUnlocalizedNameWithPrefix("smooth_stone")
@@ -88,7 +86,7 @@ public enum ModBlocks {
 	RED_GLAZED_TERRACOTTA(ConfigBlocksItems.enableGlazedTerracotta, new BlockGlazedTerracotta(14)),
 	BLACK_GLAZED_TERRACOTTA(ConfigBlocksItems.enableGlazedTerracotta, new BlockGlazedTerracotta(15)),
 	COPPER_BLOCK(ConfigBlocksItems.enableCopper, new BlockCopper()),
-	LIGHTNING_ROD(Reference.TESTING, new BlockLightningRod()),
+	LIGHTNING_ROD(EtFuturum.TESTING, new BlockLightningRod()),
 	DEEPSLATE(ConfigBlocksItems.enableDeepslate, new BlockDeepslate()),
 	COBBLED_DEEPSLATE(ConfigBlocksItems.enableDeepslate, new BaseBlock(Material.rock).setNames("cobbled_deepslate")
 			.setBlockSound(ModSounds.soundDeepslate).setHardness(3.5F).setResistance(6).setCreativeTab(EtFuturum.creativeTabBlocks)),
@@ -113,14 +111,12 @@ public enum ModBlocks {
 	TINTED_GLASS(ConfigBlocksItems.enableAmethyst, new BlockTintedGlass()),
 
 	MUD(ConfigBlocksItems.enableMud, new BlockMud()),
+	MUDDY_MANGROVE_ROOTS(ConfigBlocksItems.enableMud, new BlockMuddyMangroveRoots()),
 	PACKED_MUD(ConfigBlocksItems.enableMud, new BlockPackedMud()),
-	MANGROVE_ROOTS(ConfigBlocksItems.enableMangroveBlocks, new BlockMangroveRoots()),
-	MUDDY_MANGROVE_ROOTS(ConfigBlocksItems.enableMangroveBlocks, new BlockMuddyMangroveRoots()),
 
 	MOSS_BLOCK(ConfigBlocksItems.enableMoss, new BlockMoss()),
 	MOSS_CARPET(ConfigBlocksItems.enableMoss, new BlockMossCarpet()),
 	AZALEA(ConfigBlocksItems.enableMoss, new BlockAzalea()),
-	AZALEA_LEAVES(ConfigBlocksItems.enableMoss, new BlockAzaleaLeaves()),
 
 	STONE_WALL(ConfigBlocksItems.enableExtraVanillaWalls, new BaseWall("stone_wall", new Block[]{Blocks.stonebrick, Blocks.stonebrick, Blocks.sandstone, Blocks.brick_block}, new int[]{0, 1, 0, 0}, new String[]{"stone_brick_wall", "mossy_stone_brick_wall", "sandstone_wall", "brick_wall"})),
 	NETHER_BRICK_WALL(ConfigBlocksItems.enableExtraVanillaWalls, new BaseWall("nether_brick_wall", new Block[]{Blocks.nether_brick}, new int[]{0}, null)),
@@ -249,9 +245,9 @@ public enum ModBlocks {
 	FLETCHING_TABLE(ConfigBlocksItems.enableFletchingTable, new BlockFletchingTable(), ItemBlockDecorationWorkbench.class),
 	CARTOGRAPHY_TABLE(ConfigBlocksItems.enableCartographyTable, new BlockCartographyTable(), ItemBlockDecorationWorkbench.class),
 	LOOM(ConfigBlocksItems.enableLoom, new BlockLoom(), ItemBlockDecorationWorkbench.class),
-	DRIPSTONE_BLOCK(Reference.TESTING, new BaseBlock(Material.rock).setNames("dripstone_block")
+	DRIPSTONE_BLOCK(EtFuturum.TESTING, new BaseBlock(Material.rock).setNames("dripstone_block")
 			.setBlockSound(ModSounds.soundDripstoneBlock).setHardness(1.5F).setResistance(1F)),
-	POINTED_DRIPSTONE(Reference.TESTING, new BlockPointedDripstone()),
+	POINTED_DRIPSTONE(EtFuturum.TESTING, new BlockPointedDripstone()),
 	HONEY_BLOCK(ConfigBlocksItems.enableHoney, new BlockHoney()),
 	HONEYCOMB_BLOCK(ConfigBlocksItems.enableHoney, new BaseBlock(Material.clay).setNames("honeycomb_block")
 			.setBlockSound(ModSounds.soundCoralBlock).setHardness(0.6F).setResistance(0.6F)),
@@ -282,10 +278,6 @@ public enum ModBlocks {
 	WEEPING_VINES(ConfigBlocksItems.enableCrimsonBlocks, new BlockWeepingVines()),
 	TWISTING_VINES(ConfigBlocksItems.enableWarpedBlocks, new BlockTwistingVines()),
 
-	PINK_PETALS(ConfigBlocksItems.enableCherryBlocks, new BlockPinkPetals(), ItemBlock.class), //Should not be potable
-	SAPLING(ConfigBlocksItems.enableCherryBlocks || ConfigBlocksItems.enableMangroveBlocks, new BlockModernSapling()),
-	BAMBOO_SAPLING(ConfigBlocksItems.enableBambooBlocks, new BlockBambooShoot(), null),
-	LEAVES(ConfigBlocksItems.enableCherryBlocks || ConfigBlocksItems.enableMangroveBlocks, new BlockModernLeaves()),
 	WOOD_PLANKS(ConfigBlocksItems.woodVariants, new BlockModernWoodPlanks()),
 	WOOD_SLAB(ConfigBlocksItems.woodVariants, new BlockModernWoodSlab(false)),
 	DOUBLE_WOOD_SLAB(ConfigBlocksItems.woodVariants, new BlockModernWoodSlab(true)),
@@ -293,10 +285,9 @@ public enum ModBlocks {
 	//new wood logs
 	CRIMSON_STEM(ConfigBlocksItems.enableCrimsonBlocks, new BlockNetherStem("crimson")),
 	WARPED_STEM(ConfigBlocksItems.enableWarpedBlocks, new BlockNetherStem("warped")),
-	MANGROVE_LOG(ConfigBlocksItems.enableMangroveBlocks, new BaseLog("mangrove")),
-	CHERRY_LOG(ConfigBlocksItems.enableCherryBlocks, new BaseLog("cherry").setBlockSound(ModSounds.soundCherryWood)),
-	BAMBOO_BLOCK(ConfigBlocksItems.enableBambooBlocks, new BlockBambooBlock("bamboo").setBlockSound(ModSounds.soundBambooWood)),
-	BAMBOO(ConfigBlocksItems.enableBambooBlocks, new BlockBamboo(), null),
+	MANGROVE_LOG(ConfigBlocksItems.enableMangroveBlocks, new BlockModernLog("mangrove")),
+	CHERRY_LOG(ConfigBlocksItems.enableCherryBlocks, new BlockModernLog("cherry", ModSounds.soundCherryWood)),
+	BAMBOO_BLOCK(ConfigBlocksItems.enableBambooBlocks, new BlockBambooBlock("bamboo", ModSounds.soundBambooWood)),
 
 	//new wood stairs
 	CRIMSON_STAIRS(ConfigBlocksItems.enableCrimsonBlocks, new BaseStairs(WOOD_PLANKS.get(), 0).setBlockSound(ModSounds.soundNetherWood).setUnlocalizedNameWithPrefix("crimson")),
@@ -306,10 +297,10 @@ public enum ModBlocks {
 	BAMBOO_STAIRS(ConfigBlocksItems.enableBambooBlocks, new BaseStairs(WOOD_PLANKS.get(), 4).setBlockSound(ModSounds.soundBambooWood).setUnlocalizedNameWithPrefix("bamboo")),
 
 	//Not plank, but like plank
-	BAMBOO_MOSAIC(ConfigBlocksItems.enableBambooBlocks, new BlockBambooMosaic()),
-	BAMBOO_MOSAIC_SLAB(ConfigBlocksItems.enableBambooBlocks, new BaseSlab(false, Material.wood, "bamboo_mosaic").setNames("bamboo_mosaic_slab")
+	BAMBOO_MOSAIC(ConfigBlocksItems.woodVariants, new BlockBambooMosaic()),
+	BAMBOO_MOSAIC_SLAB(ConfigBlocksItems.woodVariants, new BaseSlab(false, Material.wood, "bamboo_mosaic").setNames("bamboo_mosaic_slab")
 			.setBlockSound(ModSounds.soundBambooWood).setHardness(2).setResistance(3)),
-	DOUBLE_BAMBOO_MOSAIC_SLAB(ConfigBlocksItems.enableBambooBlocks, new BaseSlab(true, Material.wood, "bamboo_mosaic").setNames("bamboo_mosaic_slab")
+	DOUBLE_BAMBOO_MOSAIC_SLAB(ConfigBlocksItems.woodVariants, new BaseSlab(true, Material.wood, "bamboo_mosaic").setNames("bamboo_mosaic_slab")
 			.setBlockSound(ModSounds.soundBambooWood).setHardness(2).setResistance(3)),
 	BAMBOO_MOSAIC_STAIRS(ConfigBlocksItems.enableBambooBlocks, new BaseStairs(BAMBOO_MOSAIC.get(), 0).setBlockSound(ModSounds.soundBambooWood).setUnlocalizedNameWithPrefix("bamboo_mosaic")),
 
@@ -445,21 +436,21 @@ public enum ModBlocks {
 
 	//Unfinished stuff
 
-	SCULK(/*ConfigBlocksItems.enableSculk && */Reference.TESTING, new BlockSculk()),
-	SCULK_CATALYST(/*ConfigBlocksItems.enableSculk && */Reference.TESTING, new BlockSculkCatalyst()),
+	SCULK(/*ConfigBlocksItems.enableSculk && */EtFuturum.TESTING, new BlockSculk()),
+	SCULK_CATALYST(/*ConfigBlocksItems.enableSculk && */EtFuturum.TESTING, new BlockSculkCatalyst()),
 
 	//Creative-only stuff
 
-	NETHERITE_STAIRS(ConfigBlocksItems.enableNetherite, new BlockNetheriteStairs()),
-	END_GATEWAY(Reference.TESTING, new BlockEndGateway()),
+	NETHERITE_STAIRS(ConfigBlocksItems.enableNetherite, new BlockNetheriteStairs(), ItemBlockUninflammable.class),
+	END_GATEWAY(EtFuturum.TESTING, new BlockEndGateway()),
 	LIGHT(ConfigBlocksItems.enableLightBlock, new BlockLight()),
 	BARRIER(ConfigBlocksItems.enableBarrier, new BlockBarrier()),
 
 	//Mod support
 	MODDED_RAW_ORE_BLOCK(ConfigBlocksItems.enableRawOres && ConfigModCompat.moddedRawOres, new BlockModdedRawOre()),
 	MODDED_DEEPSLATE_ORE(ConfigModCompat.moddedDeepslateOres && ConfigBlocksItems.enableDeepslate && ConfigBlocksItems.enableDeepslateOres, new BlockModdedDeepslateOre()),
-	DEEPSLATE_CERTUS_QUARTZ_ORE(ModsList.APPLIED_ENERGISTICS_2.isLoaded() && ConfigModCompat.moddedDeepslateOres && ConfigBlocksItems.enableDeepslate && ConfigBlocksItems.enableDeepslateOres, new BlockDeepslateCertusQuartzOre()),
-	DEEPSLATE_THAUMCRAFT_ORE(ModsList.THAUMCRAFT.isLoaded() && ConfigModCompat.moddedDeepslateOres && ConfigBlocksItems.enableDeepslate && ConfigBlocksItems.enableDeepslateOres, new BlockDeepslateThaumcraftOre()),
+	DEEPSLATE_CERTUS_QUARTZ_ORE(EtFuturum.hasAE2 && ConfigModCompat.moddedDeepslateOres && ConfigBlocksItems.enableDeepslate && ConfigBlocksItems.enableDeepslateOres, new BlockDeepslateCertusQuartzOre()),
+	DEEPSLATE_THAUMCRAFT_ORE(EtFuturum.hasThaumcraft && ConfigModCompat.moddedDeepslateOres && ConfigBlocksItems.enableDeepslate && ConfigBlocksItems.enableDeepslateOres, new BlockDeepslateThaumcraftOre()),
 	;
 
 	public static final ModBlocks[] DOORS = new ModBlocks[]{DOOR_SPRUCE, DOOR_BIRCH, DOOR_JUNGLE, DOOR_ACACIA, DOOR_DARK_OAK, CRIMSON_DOOR, WARPED_DOOR, MANGROVE_DOOR, CHERRY_DOOR, BAMBOO_DOOR};
@@ -497,10 +488,8 @@ public enum ModBlocks {
 	@Deprecated
 	public static final Block red_sandstone = RED_SANDSTONE.get();
 
-	public static final ModBlocks[] VALUES = values();
-
 	public static void init() {
-		for (ModBlocks block : VALUES) {
+		for (ModBlocks block : values()) {
 			if (block.isEnabled()) {
 				if (block.getItemBlock() != null || !block.getHasItemBlock()) {
 					GameRegistry.registerBlock(block.get(), block.getItemBlock(), block.name().toLowerCase());
@@ -528,11 +517,10 @@ public enum ModBlocks {
 
 	ModBlocks(Boolean enabled, Block block) {
 		this(enabled, block,
-				block instanceof BaseSlab ? BaseSlabItemBlock.class
-//						: block instanceof BaseWall ? BaseWallItemBlock.class
+				block instanceof ISubBlocksBlock && !(block instanceof BaseSlab) ? BaseItemBlock.class
+						: block instanceof BaseSlab ? BaseSlabItemBlock.class
+						: block instanceof BaseWall ? BaseWallItemBlock.class
 						: block instanceof BaseFlower ? BasePotableItemBlock.class
-						: block instanceof BaseLeaves ? BaseLeavesItemBlock.class
-						: block instanceof ISubBlocksBlock ? BaseItemBlock.class
 						: null);
 		hasItemBlock = true;
 	}

@@ -2,12 +2,11 @@ package ganymedes01.etfuturum.api;
 
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.registry.GameRegistry;
+import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.api.mappings.RegistryMapping;
-import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.recipes.ModRecipes;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Map;
@@ -27,9 +26,7 @@ public class PistonBehaviorRegistry {
 		if ((meta < 0 || meta > 15) && meta != OreDictionary.WILDCARD_VALUE) {
 			throw new IllegalArgumentException("Meta must be between 0 and 15 (inclusive)");
 		}
-		if (block != null && block != Blocks.air) {
-			BEHAVIOR_REGISTRY.put(new RegistryMapping<>(block, meta), action);
-		}
+		BEHAVIOR_REGISTRY.put(new RegistryMapping<>(block, meta), action);
 	}
 
 	public static void addPistonBehavior(Block block, String action) {
@@ -103,16 +100,16 @@ public class PistonBehaviorRegistry {
 			}
 		}
 
-		if (ModsList.TINKERS_CONSTRUCT.isLoaded()) {
+		if (EtFuturum.hasTConstruct) {
 			addPistonBehavior(GameRegistry.findBlock("TConstruct", "slime.gel"), PistonAction.BOUNCES_ENTITIES);
 			addPistonBehavior(GameRegistry.findBlock("TConstruct", "GlueBlock"), PistonAction.PULLS_ENTITIES);
 		}
 
-		if (ModsList.MINEFACTORY_RELOADED.isLoaded()) {
+		if (EtFuturum.hasMineFactory) {
 			addPistonBehavior(GameRegistry.findBlock("MineFactoryReloaded", "pinkslime.block"), PistonAction.BOUNCES_ENTITIES);
 		}
 
-		if (ModsList.BIOMES_O_PLENTY.isLoaded()) {
+		if (EtFuturum.hasBiomesOPlenty) {
 			addPistonBehavior(GameRegistry.findBlock("BiomesOPlenty", "honeyBlock"), PistonAction.PULLS_ENTITIES);
 		}
 	}

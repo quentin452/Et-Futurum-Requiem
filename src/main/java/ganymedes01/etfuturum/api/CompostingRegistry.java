@@ -3,7 +3,6 @@ package ganymedes01.etfuturum.api;
 import com.google.common.collect.ImmutableList;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.ModItems;
-import ganymedes01.etfuturum.blocks.BlockComposter;
 import ganymedes01.etfuturum.core.utils.ItemStackMap;
 import ganymedes01.etfuturum.core.utils.Logger;
 import ganymedes01.etfuturum.recipes.ModRecipes;
@@ -27,19 +26,12 @@ public class CompostingRegistry {
 				new ItemStack(Items.melon_seeds),
 				new ItemStack(Items.pumpkin_seeds),
 				new ItemStack(Items.wheat_seeds),
+				new ItemStack(ModItems.BEETROOT_SEEDS.get()),
 				"listAllSeeds",
 				"treeSapling",
 				"treeLeaves",
-				ModItems.BEETROOT_SEEDS.newItemStack(),
-				ModItems.SWEET_BERRIES.newItemStack(),
-				ModBlocks.MOSS_CARPET.newItemStack(),
-				ModBlocks.PINK_PETALS.newItemStack(),
-				ModBlocks.MANGROVE_ROOTS.newItemStack(),
-				ModBlocks.AZALEA_LEAVES.newItemStack(1, 0)
+				new ItemStack(ModItems.SWEET_BERRIES.get())
 		), 30);
-
-		remove(ModBlocks.AZALEA.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-		remove(ModBlocks.AZALEA_LEAVES.newItemStack(1, OreDictionary.WILDCARD_VALUE));
 
 		registerCompostable(ImmutableList.of(
 				new ItemStack(Blocks.cactus),
@@ -48,10 +40,7 @@ public class CompostingRegistry {
 				new ItemStack(Blocks.double_plant, 1, 2),
 				new ItemStack(Blocks.vine),
 				ModBlocks.NETHER_ROOTS.newItemStack(1, OreDictionary.WILDCARD_VALUE),
-				ModBlocks.NETHER_SPROUTS.newItemStack(1, OreDictionary.WILDCARD_VALUE),
-				ModBlocks.TWISTING_VINES.newItemStack(),
-				ModBlocks.WEEPING_VINES.newItemStack(),
-				ModBlocks.AZALEA_LEAVES.newItemStack(1, 1)
+				ModBlocks.NETHER_SPROUTS.newItemStack(1, OreDictionary.WILDCARD_VALUE)
 		), 50);
 
 		registerCompostable(ImmutableList.of(
@@ -67,22 +56,20 @@ public class CompostingRegistry {
 				new ItemStack(Blocks.double_plant, 1, 5),
 				new ItemStack(Blocks.red_flower, 1, OreDictionary.WILDCARD_VALUE),
 				new ItemStack(Blocks.yellow_flower, 1, OreDictionary.WILDCARD_VALUE),
+				new ItemStack(ModBlocks.ROSE.get()),
+				new ItemStack(ModBlocks.CORNFLOWER.get()),
+				new ItemStack(ModBlocks.LILY_OF_THE_VALLEY.get()),
+				new ItemStack(ModBlocks.WITHER_ROSE.get()),
 				new ItemStack(Blocks.waterlily),
 				new ItemStack(Blocks.melon_block),
 				new ItemStack(Blocks.brown_mushroom),
 				new ItemStack(Blocks.red_mushroom),
 				new ItemStack(Items.nether_wart),
-				new ItemStack(Blocks.pumpkin),
 				"cropPotato",
+				new ItemStack(Blocks.pumpkin),
 				"cropWheat",
-				ModBlocks.ROSE.newItemStack(),
-				ModBlocks.CORNFLOWER.newItemStack(),
-				ModBlocks.LILY_OF_THE_VALLEY.newItemStack(),
-				ModBlocks.WITHER_ROSE.newItemStack(),
 				ModBlocks.NETHER_FUNGUS.newItemStack(1, OreDictionary.WILDCARD_VALUE),
-				ModBlocks.SHROOMLIGHT.newItemStack(),
-				ModBlocks.AZALEA.newItemStack(1, 0),
-				ModBlocks.MOSS_BLOCK.newItemStack()
+				ModBlocks.SHROOMLIGHT.newItemStack()
 		), 65);
 
 		registerCompostable(ImmutableList.of(
@@ -93,8 +80,7 @@ public class CompostingRegistry {
 				new ItemStack(Blocks.red_mushroom_block, 1, OreDictionary.WILDCARD_VALUE),
 				new ItemStack(Blocks.brown_mushroom_block, 1, OreDictionary.WILDCARD_VALUE),
 				ModBlocks.RED_MUSHROOM.newItemStack(1, OreDictionary.WILDCARD_VALUE),
-				ModBlocks.BROWN_MUSHROOM.newItemStack(1, OreDictionary.WILDCARD_VALUE),
-				ModBlocks.AZALEA.newItemStack(1, 1)
+				ModBlocks.BROWN_MUSHROOM.newItemStack(1, OreDictionary.WILDCARD_VALUE)
 		), 85);
 
 		registerCompostable(ImmutableList.of(
@@ -116,7 +102,7 @@ public class CompostingRegistry {
 	 * A fill chance of 200 is a 100% chance to fill two layers.
 	 */
 	public static void registerCompostable(Object itemObj, int percent) {
-		if (percent <= 0 || percent > BlockComposter.FULL_META * 100) {
+		if (percent <= 0 || percent > 600) {
 			throw new IllegalArgumentException("Tried to add a composter entry with percent value " + percent + " which is not allowed, should be above 0 and equal to or below 600!");
 		}
 

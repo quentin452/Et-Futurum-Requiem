@@ -23,7 +23,7 @@ public abstract class BlockModelBase implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public void renderInventoryBlock(Block block, int meta, int modelID, RenderBlocks renderer) {
-		if (block.getRenderBlockPass() == 1) {
+		if (block.getRenderType() == 2) {
 			OpenGLHelper.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			OpenGLHelper.enableBlend();
 		}
@@ -82,52 +82,12 @@ public abstract class BlockModelBase implements ISimpleBlockRenderingHandler {
 		return this;
 	}
 
-	public void drawStraightCrossedSquares(RenderBlocks renderer, Block block, double dx, double dy, double dz) {
-		drawStraightCrossedSquares(renderer, block, dx, dy, dz, 0, 0, 0);
+	public void renderRawFace(RenderBlocks renderer, Block block, double x, double y, double z, double startX, double endX, double startY, double endY, double startZ, double endZ, double startU, double startV, double endU, double endV, IIcon iicon) {
+		this.renderRawFace(renderer, block, x, y, z, startX, endX, startY, endY, startZ, endZ, startU, startV, endU, endV, iicon);
+
 	}
 
-	public void drawStraightCrossedSquares(RenderBlocks renderer, Block block, double dx, double dy, double dz, double offx, double offy, double offz) {
-		double minX = renderer.renderMinX;
-		double minY = renderer.renderMinY;
-		double minZ = renderer.renderMinZ;
-		double maxX = renderer.renderMaxX;
-		double maxY = renderer.renderMaxY;
-		double maxZ = renderer.renderMaxZ;
-
-		renderer.setRenderBounds(0.5, 0, 0, 0.5, 1, 1);
-		renderFaceXNeg(renderer, block, dx + offx, dy + offy, dz + offz);
-		renderFaceXPos(renderer, block, dx + offx, dy + offy, dz + offz);
-
-		renderer.setRenderBounds(0, 0, 0.5, 1, 1, 0.5);
-		renderFaceZNeg(renderer, block, dx + offx, dy + offy, dz + offz);
-		renderFaceZPos(renderer, block, dx + offx, dy + offy, dz + offz);
-
-		renderer.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
-	}
-
-	public void renderRawFace(RenderBlocks renderer, Block block, double x, double y, double z,
-							  double startX, double endX, double startY, double endY, double startZ, double endZ,
-							  double startU, double startV, double endU, double endV, IIcon iicon,
-							  float r, float g, float b) {
-		renderRawFace(renderer, block, x, y, z, startX, endX, startY, endY, startZ, endZ, startU, startV, endU, endV, iicon, 0, r, g, b);
-	}
-
-	public void renderRawFace(RenderBlocks renderer, Block block, double x, double y, double z,
-							  double startX, double endX, double startY, double endY, double startZ, double endZ,
-							  double startU, double startV, double endU, double endV, IIcon iicon) {
-		renderRawFace(renderer, block, x, y, z, startX, endX, startY, endY, startZ, endZ, startU, startV, endU, endV, iicon, 0);
-	}
-
-	public void renderRawFace(RenderBlocks renderer, Block block, double x, double y, double z,
-							  double startX, double endX, double startY, double endY, double startZ, double endZ,
-							  double startU, double startV, double endU, double endV, IIcon iicon, int rotate) {
-		renderRawFace(renderer, block, x, y, z, startX, endX, startY, endY, startZ, endZ, startU, startV, endU, endV, iicon, rotate, 1, 1, 1);
-	}
-
-	public void renderRawFace(RenderBlocks renderer, Block block, double x, double y, double z,
-							  double startX, double endX, double startY, double endY, double startZ, double endZ,
-							  double startU, double startV, double endU, double endV, IIcon iicon, int rotate,
-							  float r, float g, float b) {
+	public void renderRawFace(RenderBlocks renderer, Block block, double x, double y, double z, double startX, double endX, double startY, double endY, double startZ, double endZ, double startU, double startV, double endU, double endV, IIcon iicon, int rotate) {
 		double startUInterpolated;
 		double startVInterpolated;
 		double endUInterpolated;
@@ -179,7 +139,7 @@ public abstract class BlockModelBase implements ISimpleBlockRenderingHandler {
 		}
 
 		tessellator.setBrightness(block.getMixedBrightnessForBlock(renderer.blockAccess, MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z)));
-		tessellator.setColorOpaque_F(r, g, b);
+		tessellator.setColorOpaque_F(1, 1, 1);
 		tessellator.addVertexWithUV(x + startX, y + startY, z + startZ, startUInterpolated, startVInterpolated);
 		tessellator.addVertexWithUV(x + startX2, y + endY, z + startZ2, startUInterpolated2, startVInterpolated2);
 		tessellator.addVertexWithUV(x + endX1, y + endY, z + endZ1, endUInterpolated, endVInterpolated);
@@ -187,33 +147,17 @@ public abstract class BlockModelBase implements ISimpleBlockRenderingHandler {
 	}
 
 
-	public void renderRawDoubleSidedFace(RenderBlocks renderer, Block block, double x, double y, double z,
-										 double startX, double endX, double startY, double endY, double startZ, double endZ, double startU, double startV,
-										 double endU, double endV, IIcon iicon, int rotate,
-										 float r, float g, float b) {
+	public void renderRawDoubleSidedFace(RenderBlocks renderer, Block block, double x, double y, double z, double startX, double endX, double startY, double endY, double startZ, double endZ, double startU, double startV, double endU, double endV, IIcon iicon, int rotate) {
 		if (rotate == 1) {
-			renderRawFace(renderer, block, x, y, z, startX, endX, endY, startY, startZ, endZ, startU, startV, endU, endV, iicon, 1, r, g, b);
+			renderRawFace(renderer, block, x, y, z, startX, endX, endY, startY, startZ, endZ, startU, startV, endU, endV, iicon, 1);
 			renderRawFace(renderer, block, x, y, z, endX, startX, endY, startY, startZ, endZ, endU, endV, startU, startV, iicon, 1);
 		} else if (rotate == 2) {
-			renderRawFace(renderer, block, x, y, z, startX, endX, endY, startY, startZ, endZ, startU, startV, endU, endV, iicon, 2, r, g, b);
-			renderRawFace(renderer, block, x, y, z, startX, endX, endY, startY, endZ, startZ, endU, endV, startU, startV, iicon, 2, r, g, b);
+			renderRawFace(renderer, block, x, y, z, startX, endX, endY, startY, startZ, endZ, startU, startV, endU, endV, iicon, 2);
+			renderRawFace(renderer, block, x, y, z, startX, endX, endY, startY, endZ, startZ, endU, endV, startU, startV, iicon, 2);
 		} else {
-			renderRawFace(renderer, block, x, y, z, startX, endX, startY, endY, startZ, endZ, startU, startV, endU, endV, iicon, rotate, r, g, b);
-			renderRawFace(renderer, block, x, y, z, endX, startX, startY, endY, endZ, startZ, startU, startV, endU, endV, iicon, rotate, r, g, b);
+			renderRawFace(renderer, block, x, y, z, startX, endX, startY, endY, startZ, endZ, startU, startV, endU, endV, iicon, rotate);
+			renderRawFace(renderer, block, x, y, z, endX, startX, startY, endY, endZ, startZ, startU, startV, endU, endV, iicon, rotate);
 		}
-	}
-
-	public void renderRawDoubleSidedFace(RenderBlocks renderer, Block block, double x, double y, double z,
-										 double startX, double endX, double startY, double endY, double startZ, double endZ, double startU, double startV,
-										 double endU, double endV, IIcon iicon, int rotate) {
-		renderRawDoubleSidedFace(renderer, block, x, y, z, startX, endX, startY, endY, startZ, endZ, startU, startV, endU, endV, iicon, rotate, 1, 1, 1);
-	}
-
-	public void renderRawDoubleSidedFace(RenderBlocks renderer, Block block, double x, double y, double z,
-										 double startX, double endX, double startY, double endY, double startZ, double endZ,
-										 double startU, double startV, double endU, double endV, IIcon iicon,
-										 float r, float g, float b) {
-		renderRawDoubleSidedFace(renderer, block, x, y, z, startX, endX, startY, endY, startZ, endZ, startU, startV, endU, endV, iicon, 0, r, g, b);
 	}
 
 	public void renderRawDoubleSidedFace(RenderBlocks renderer, Block block, double x, double y, double z, double startX, double endX, double startY, double endY, double startZ, double endZ, double startU, double startV, double endU, double endV, IIcon iicon) {

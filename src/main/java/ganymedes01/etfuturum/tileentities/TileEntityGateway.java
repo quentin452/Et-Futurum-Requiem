@@ -1,6 +1,5 @@
 package ganymedes01.etfuturum.tileentities;
 
-import ganymedes01.etfuturum.core.utils.Utils;
 import ganymedes01.etfuturum.core.utils.helpers.BlockPos;
 import ganymedes01.etfuturum.world.end.gen.WorldGenEndGateway;
 import ganymedes01.etfuturum.world.end.gen.WorldGenEndIsland;
@@ -283,7 +282,7 @@ public class TileEntityGateway extends TileEntity {
 	public int getParticleAmount() {
 		int i = 0;
 
-		for (EnumFacing enumfacing : Utils.ENUM_FACING_VALUES) {
+		for (EnumFacing enumfacing : EnumFacing.values()) {
 			if (this.shouldRenderFace(enumfacing))
 				i++;
 		}

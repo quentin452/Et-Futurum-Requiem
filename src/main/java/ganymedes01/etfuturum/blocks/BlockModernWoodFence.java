@@ -1,9 +1,8 @@
 package ganymedes01.etfuturum.blocks;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModBlocks;
+import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
 import ganymedes01.etfuturum.configuration.configs.ConfigFunctions;
 import ganymedes01.etfuturum.lib.RenderIDs;
 import net.minecraft.block.Block;
@@ -90,11 +89,7 @@ public class BlockModernWoodFence extends BlockFence implements ISubBlocksBlock 
 
 	@Override
 	public int getRenderType() {
-		//We need to do this because some things stupidly check if there's a fence by checking if the render type is 11 and not if it's instance of Fence!!!
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-			return RenderIDs.FENCE;
-		}
-		return super.getRenderType();
+		return RenderIDs.FENCE;
 	}
 
 	@Override

@@ -142,7 +142,6 @@ public class EtFuturumFXParticle extends EntityFX {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		this.prevParticleAngle = this.particleAngle;
 		entityBrightness = worldObj.getLightBrightness((int) posX, (int) posY, (int) posZ);
 
 		if (particleAge > particleMaxAge / 2) {

@@ -26,12 +26,8 @@ public class RenderIDs {
 	public static final int HONEY_BLOCK = RenderingRegistry.getNextAvailableRenderId();
 	public static final int CHAIN = RenderingRegistry.getNextAvailableRenderId();
 	public static final int AZALEA = RenderingRegistry.getNextAvailableRenderId();
-	public static final int EMISSIVE_DOUBLE_LAYER = RenderingRegistry.getNextAvailableRenderId();
-	public static final int MANGROVE_ROOTS = RenderingRegistry.getNextAvailableRenderId();
-	//	public static final int WATERLOGGED_MANGROVE_ROOTS = RenderingRegistry.getNextAvailableRenderId();
-	public static final int PINK_PETALS = RenderingRegistry.getNextAvailableRenderId();
-	public static final int BAMBOO = RenderingRegistry.getNextAvailableRenderId();
 
 	public static final int EXTENDED_CROSSED_SQUARES = RenderingRegistry.getNextAvailableRenderId();
 	public static final int FENCE = RenderingRegistry.getNextAvailableRenderId();
+	public static final int EMISSIVE_DOUBLE_LAYER = RenderingRegistry.getNextAvailableRenderId();
 }

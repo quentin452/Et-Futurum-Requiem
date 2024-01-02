@@ -3,15 +3,10 @@ package ganymedes01.etfuturum.world;
 import cpw.mods.fml.common.IWorldGenerator;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.blocks.BlockChorusFlower;
-import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.configs.ConfigWorld;
-import ganymedes01.etfuturum.core.utils.Utils;
 import ganymedes01.etfuturum.world.end.dimension.WorldProviderEFREnd;
 import ganymedes01.etfuturum.world.generate.WorldGenDeepslateLayerBlob;
 import ganymedes01.etfuturum.world.generate.WorldGenMinableCustom;
-import ganymedes01.etfuturum.world.generate.decorate.WorldGenBamboo;
-import ganymedes01.etfuturum.world.generate.decorate.WorldGenCherryTrees;
-import ganymedes01.etfuturum.world.generate.decorate.WorldGenPinkPetals;
 import ganymedes01.etfuturum.world.generate.feature.WorldGenAmethystGeode;
 import ganymedes01.etfuturum.world.generate.feature.WorldGenFossil;
 import ganymedes01.etfuturum.world.structure.OceanMonument;
@@ -24,14 +19,10 @@ import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderFlat;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
-import net.minecraft.world.gen.feature.WorldGenFlowers;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
@@ -57,26 +48,17 @@ public class EtFuturumWorldGenerator implements IWorldGenerator {
 	protected final WorldGenMinable tuffGen = new WorldGenDeepslateLayerBlob(ConfigWorld.maxTuffPerCluster, true);
 	protected WorldGenerator amethystGen;
 	protected WorldGenerator fossilGen;
-	protected WorldGenerator berryBushGen;
-	protected WorldGenerator cornflowerGen;
-	protected WorldGenerator lilyValleyGen;
-	protected WorldGenerator pinkPetalsGen;
-	protected WorldGenerator bambooGen;
-	private List<BiomeGenBase> fossilBiomes;
-	private List<BiomeGenBase> berryBushBiomes;
-	private List<BiomeGenBase> cornflowerBiomes;
-	private List<BiomeGenBase> lilyValleyBiomes;
-	;
-	private List<BiomeGenBase> bambooBiomes;
-
-	//trees
-	protected WorldGenAbstractTree cherryTreeGen;
-	private List<BiomeGenBase> cherryBiomes;
+	private final LinkedList<BiomeGenBase> fossilBiomes;
 
 	protected EtFuturumWorldGenerator() {
 		stoneGen.add(new WorldGenMinableCustom(ModBlocks.STONE.get(), 1, ConfigWorld.maxStonesPerCluster, Blocks.stone));
 		stoneGen.add(new WorldGenMinableCustom(ModBlocks.STONE.get(), 3, ConfigWorld.maxStonesPerCluster, Blocks.stone));
 		stoneGen.add(new WorldGenMinableCustom(ModBlocks.STONE.get(), 5, ConfigWorld.maxStonesPerCluster, Blocks.stone));
+		//Add biomes that are only hot, AND dry AND sandy, and add all swamps.
+		fossilBiomes = new LinkedList<>(Arrays.asList(BiomeDictionary.getBiomesForType(Type.SANDY)));
+		fossilBiomes.retainAll(Arrays.asList(BiomeDictionary.getBiomesForType(Type.HOT)));
+		fossilBiomes.retainAll(Arrays.asList(BiomeDictionary.getBiomesForType(Type.DRY)));
+		fossilBiomes.addAll(Arrays.asList(BiomeDictionary.getBiomesForType(Type.SWAMP)));
 	}
 
 	public void postInit() {
@@ -84,76 +66,30 @@ public class EtFuturumWorldGenerator implements IWorldGenerator {
 				&& ModBlocks.BUDDING_AMETHYST.isEnabled() && ConfigWorld.amethystOuterBlock != null && ConfigWorld.amethystMiddleBlock != null) {
 			amethystGen = new WorldGenAmethystGeode(ConfigWorld.amethystOuterBlock, ConfigWorld.amethystMiddleBlock);
 		}
-
 		if (ConfigWorld.enableFossils && ConfigWorld.fossilBlock != null) {
-			//Add biomes that are only hot, AND dry AND sandy, and add all swamps.
-			BiomeGenBase[] fossilBiomesArray = BiomeDictionary.getBiomesForType(Type.SANDY);
-			for (BiomeGenBase biome : fossilBiomesArray) {
-				if (!ArrayUtils.contains(BiomeDictionary.getBiomesForType(Type.HOT), biome) || !ArrayUtils.contains(BiomeDictionary.getBiomesForType(Type.DRY), biome)) {
-					fossilBiomesArray = ArrayUtils.removeElement(fossilBiomesArray, biome);
-					break;
-				}
-			}
-			fossilBiomesArray = ArrayUtils.addAll(fossilBiomesArray, BiomeDictionary.getBiomesForType(Type.SWAMP));
-			fossilBiomesArray = Utils.excludeBiomesFromTypes(fossilBiomesArray, Type.NETHER, Type.END);
-			fossilBiomes = Arrays.asList(fossilBiomesArray);
 			fossilGen = new WorldGenFossil();
 		}
-
-		if (ModBlocks.SWEET_BERRY_BUSH.isEnabled()) {
-			berryBushBiomes = Arrays.asList(Utils.excludeBiomesFromTypesWithDefaults(BiomeDictionary.getBiomesForType(Type.CONIFEROUS)));
-			berryBushGen = new WorldGenFlowers(ModBlocks.SWEET_BERRY_BUSH.get());
-			((WorldGenFlowers) berryBushGen).func_150550_a(ModBlocks.SWEET_BERRY_BUSH.get(), 3);
-		}
-
 		if (ModBlocks.LILY_OF_THE_VALLEY.isEnabled()) {
-			BiomeGenBase[] lilyValleyBiomeArray = BiomeDictionary.getBiomesForType(Type.FOREST);
-			lilyValleyBiomeArray = Utils.excludeBiomesFromTypes(lilyValleyBiomeArray, Type.JUNGLE, Type.DRY, Type.HOT, Type.SNOWY, Type.COLD);
-			lilyValleyBiomes = Arrays.asList(lilyValleyBiomeArray);
-			lilyValleyGen = new WorldGenFlowers(ModBlocks.LILY_OF_THE_VALLEY.get());
+			BiomeGenBase[] biomes = BiomeDictionary.getBiomesForType(Type.FOREST);
+			biomes = ArrayUtils.removeElements(biomes, BiomeDictionary.getBiomesForType(Type.SNOWY));
+			for (BiomeGenBase biome : biomes) {
+				biome.addFlower(ModBlocks.LILY_OF_THE_VALLEY.get(), 0, 1);
+			}
 		}
-
 		if (ModBlocks.CORNFLOWER.isEnabled()) {
-			BiomeGenBase[] cornflowerBiomeArray = BiomeDictionary.getBiomesForType(Type.PLAINS);
-			cornflowerBiomeArray = Utils.excludeBiomesFromTypes(cornflowerBiomeArray, Type.SAVANNA, Type.SNOWY, Type.SAVANNA);
-			cornflowerBiomeArray = ArrayUtils.add(cornflowerBiomeArray, BiomeGenBase.getBiome(BiomeGenBase.forest.biomeID + 128));
-			cornflowerBiomes = Arrays.asList(cornflowerBiomeArray);
-			cornflowerGen = new WorldGenFlowers(ModBlocks.CORNFLOWER.get());
-			for (BiomeGenBase biome : cornflowerBiomes) {
-				biome.addFlower(ModBlocks.CORNFLOWER.get(), 0, 5);
+			BiomeGenBase[] biomes = BiomeDictionary.getBiomesForType(Type.PLAINS);
+			biomes = ArrayUtils.removeElements(biomes, BiomeDictionary.getBiomesForType(Type.SAVANNA));
+			biomes = ArrayUtils.removeElements(biomes, BiomeDictionary.getBiomesForType(Type.SNOWY));
+			for (BiomeGenBase biome : biomes) {
+				biome.addFlower(ModBlocks.CORNFLOWER.get(), 0, 1);
 			}
 		}
-
-		if (ModBlocks.BAMBOO.isEnabled()) {
-			if (ModsList.BIOMES_O_PLENTY.isLoaded()) { //BoP replaces vanilla jungles with a BoP version but forgets to tag them
-				BiomeDictionary.registerBiomeType(BiomeGenBase.getBiome(21), Type.JUNGLE); //Gets biomes by ID so we get the BOP version
-				BiomeDictionary.registerBiomeType(BiomeGenBase.getBiome(22), Type.JUNGLE);
-				BiomeDictionary.registerBiomeType(BiomeGenBase.getBiome(23), Type.JUNGLE);
-				BiomeDictionary.registerBiomeType(BiomeGenBase.getBiome(149), Type.JUNGLE);
-				BiomeDictionary.registerBiomeType(BiomeGenBase.getBiome(151), Type.JUNGLE);
-			}
-			bambooGen = new WorldGenBamboo(ModBlocks.BAMBOO.get());
-			bambooBiomes = Arrays.asList(Utils.excludeBiomesFromTypesWithDefaults(BiomeDictionary.getBiomesForType(Type.JUNGLE)));
-		}
-
-		if (ModBlocks.CHERRY_LOG.isEnabled() && ModBlocks.LEAVES.isEnabled()) {
-			BiomeGenBase[] cherryBiomeArray = BiomeDictionary.getBiomesForType(Type.MOUNTAIN);
-			cherryBiomeArray = Utils.excludeBiomesFromTypesWithDefaults(cherryBiomeArray, Type.SNOWY, Type.HOT, Type.SANDY, Type.MESA, Type.SPARSE);
-			cherryBiomes = Arrays.asList(cherryBiomeArray);
-			cherryTreeGen = new WorldGenCherryTrees(false);
-		}
-
-		if (ModBlocks.PINK_PETALS.isEnabled()) {
-			pinkPetalsGen = new WorldGenPinkPetals(ModBlocks.PINK_PETALS.get());
-			for (BiomeGenBase biome : cherryBiomes) {
-				biome.addFlower(ModBlocks.PINK_PETALS.get(), 0, 1);
-				biome.addFlower(ModBlocks.PINK_PETALS.get(), 4, 1);
-				biome.addFlower(ModBlocks.PINK_PETALS.get(), 8, 1);
-				biome.addFlower(ModBlocks.PINK_PETALS.get(), 12, 1);
+		if (ModBlocks.SWEET_BERRY_BUSH.isEnabled()) {
+			for (BiomeGenBase biome : BiomeDictionary.getBiomesForType(Type.CONIFEROUS)) {
+				biome.addFlower(ModBlocks.SWEET_BERRY_BUSH.get(), 3, 1);
 			}
 		}
 	}
-
 
 	@Override
 	public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
@@ -165,7 +101,7 @@ public class EtFuturumWorldGenerator implements IWorldGenerator {
 				x = (chunkX << 4) + rand.nextInt(16) + 8;
 				z = (chunkZ << 4) + rand.nextInt(16) + 8;
 				if (ConfigWorld.amethystRarity == 1 || rand.nextInt(ConfigWorld.amethystRarity) == 0) {
-					amethystGen.generate(world, rand, x, MathHelper.getRandomIntegerInRange(rand, 5, ConfigWorld.amethystMaxY - 5), z);
+					amethystGen.generate(world, rand, x, MathHelper.getRandomIntegerInRange(rand, 6, ConfigWorld.amethystMaxY), z);
 				}
 			}
 
@@ -176,65 +112,6 @@ public class EtFuturumWorldGenerator implements IWorldGenerator {
 			if (ConfigWorld.enableExtraMesaGold) {
 				if (ArrayUtils.contains(BiomeDictionary.getTypesForBiome(world.getBiomeGenForCoords(chunkX << 4, chunkZ << 4)), Type.MESA)) {
 					generateOre(mesaGoldGen, world, rand, chunkX, chunkZ, 20, 32, 80);
-				}
-			}
-
-			if (lilyValleyGen != null) {
-				x = (chunkX << 4) + rand.nextInt(16) + 8;
-				z = (chunkZ << 4) + rand.nextInt(16) + 8;
-				if (world.getHeightValue(x, z) > 0 && lilyValleyBiomes.contains(world.getBiomeGenForCoords(x, z))) {
-					lilyValleyGen.generate(world, rand, x, nextHeightInt(rand, world.getHeightValue(x, z) * 2), z);
-				}
-			}
-
-			if (cornflowerGen != null) {
-				x = (chunkX << 4) + rand.nextInt(16) + 8;
-				z = (chunkZ << 4) + rand.nextInt(16) + 8;
-				if (world.getHeightValue(x, z) > 0 && cornflowerBiomes.contains(world.getBiomeGenForCoords(x, z))) {
-					cornflowerGen.generate(world, rand, x, nextHeightInt(rand, world.getHeightValue(x, z) * 2), z);
-				}
-			}
-
-			if (berryBushGen != null) {
-				x = (chunkX << 4) + rand.nextInt(16) + 8;
-				z = (chunkZ << 4) + rand.nextInt(16) + 8;
-				if (world.getHeightValue(x, z) > 0 && berryBushBiomes.contains(world.getBiomeGenForCoords(x, z))) {
-					berryBushGen.generate(world, rand, x, nextHeightInt(rand, world.getHeightValue(x, z) * 2), z);
-				}
-			}
-
-			if (bambooGen != null) {
-				x = (chunkX << 4) + rand.nextInt(16) + 8;
-				z = (chunkZ << 4) + rand.nextInt(16) + 8;
-				int y = world.getHeightValue(x, z);
-				if (y > 0 && bambooBiomes.contains(world.getBiomeGenForCoords(x, z))) {
-					int count = rand.nextInt(256);
-					count = count < 240 ? 16 : count;
-					for (int i = 0; i < count; i++) {
-						int xoff = x + rand.nextInt(10) - rand.nextInt(10);
-						int yoff = y + rand.nextInt(4) - rand.nextInt(4);
-						int zoff = z + rand.nextInt(10) - rand.nextInt(10);
-						bambooGen.generate(world, rand, xoff, yoff, zoff);
-					}
-				}
-			}
-
-			if (cherryTreeGen != null) {
-				x = (chunkX << 4) + rand.nextInt(16) + 8;
-				z = (chunkZ << 4) + rand.nextInt(16) + 8;
-				int y = world.getHeightValue(x, z);
-				Block block = world.getBlock(x, y - 1, z);
-				if (y > 0 && block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, (IPlantable) ModBlocks.SAPLING.get())) {
-					BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
-					int rng = cherryBiomes.contains(biome) ? ConfigWorld.cherryTreeRarity : 0;
-					if (rng > 0 && rand.nextInt(rng) == 0) {
-						if (cherryTreeGen.generate(world, rand, x, y, z)) {
-							cherryTreeGen.func_150524_b(world, rand, x, y, z);
-							if (pinkPetalsGen != null) {
-								pinkPetalsGen.generate(world, rand, x, y, z);
-							}
-						}
-					}
 				}
 			}
 

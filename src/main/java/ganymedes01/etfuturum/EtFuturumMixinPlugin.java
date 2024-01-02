@@ -210,14 +210,6 @@ public class EtFuturumMixinPlugin implements IMixinConfigPlugin {
 			}
 		}
 
-		if (ConfigMixins.hideSingleLevelEnchants) {
-			mixins.add("singlelevel.MixinEnchantment");
-		}
-
-		if (ConfigMixins.fireproofItems) {
-			mixins.add("uninflammableitem.MixinEntityItem");
-		}
-
 		if (side == MixinEnvironment.Side.CLIENT) {
 			if (ConfigMixins.dustUnderFallingBlocks) {
 				mixins.add("blockfallingparticles.client.MixinBlockFalling");
@@ -241,10 +233,6 @@ public class EtFuturumMixinPlugin implements IMixinConfigPlugin {
 
 			if (ConfigMixins.flowerPotFixes) {
 				mixins.add("flowerpotfix.client.MixinRenderBlocks");
-			}
-
-			if (ConfigMixins.interpolatedTextures) {
-				mixins.add("interpolatedtexturemap.client.MixinTextureMap");
 			}
 		}
 

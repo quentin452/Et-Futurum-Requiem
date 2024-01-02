@@ -14,8 +14,7 @@ public class MixinEntity {
 
 	@Inject(method = "isEntityInsideOpaqueBlock", at = @At("HEAD"), cancellable = true)
 	private void ignoreBlockIfSpectator(CallbackInfoReturnable<Boolean> cir) {
-		if (this.noClip) {
+		if (this.noClip)
 			cir.setReturnValue(false);
-		}
 	}
 }

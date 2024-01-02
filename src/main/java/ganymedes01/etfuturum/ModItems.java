@@ -2,7 +2,6 @@ package ganymedes01.etfuturum;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import ganymedes01.etfuturum.blocks.BlockWoodSign;
-import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
 import ganymedes01.etfuturum.configuration.configs.ConfigEntities;
 import ganymedes01.etfuturum.configuration.configs.ConfigMixins;
@@ -10,7 +9,6 @@ import ganymedes01.etfuturum.configuration.configs.ConfigModCompat;
 import ganymedes01.etfuturum.entities.EntityNewBoat;
 import ganymedes01.etfuturum.items.*;
 import ganymedes01.etfuturum.items.equipment.*;
-import ganymedes01.etfuturum.lib.Reference;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -39,7 +37,7 @@ public enum ModItems {
 	NUGGET_IRON(ConfigBlocksItems.enableIronNugget, new BaseItem("iron_nugget")),
 	RAW_ORE(ConfigBlocksItems.enableRawOres, new BaseSubtypesItem("raw_copper", "raw_iron", "raw_gold").setNames("raw_ore")),
 	//modded_raw_ore(true, new ItemRawOre(true)),
-	NETHERITE_SCRAP(ConfigBlocksItems.enableNetherite, new BaseItem("netherite_scrap")),
+	NETHERITE_SCRAP(ConfigBlocksItems.enableNetherite, new BaseUninflammableItem("netherite_scrap")),
 	NETHERITE_INGOT(ConfigBlocksItems.enableNetherite, new ItemNetheriteIngot()),
 	NETHERITE_HELMET(ConfigBlocksItems.enableNetherite, new ItemEFRArmour(ModMaterials.NETHERITE_ARMOUR, 0, ConfigBlocksItems.netheriteHelmetDurability)),
 	NETHERITE_CHESTPLATE(ConfigBlocksItems.enableNetherite, new ItemEFRArmour(ModMaterials.NETHERITE_ARMOUR, 1, ConfigBlocksItems.netheriteChestplateDurability)),
@@ -59,10 +57,9 @@ public enum ModItems {
 	PIGSTEP_RECORD(ConfigBlocksItems.enablePigstep, new ItemEtFuturumRecord("pigstep")),
 	OTHERSIDE_RECORD(ConfigBlocksItems.enableOtherside, new ItemEtFuturumRecord("otherside")),
 	AMETHYST_SHARD(ConfigBlocksItems.enableAmethyst, new BaseItem("amethyst_shard")),
-	SHULKER_BOX_UPGRADE(ModsList.IRON_CHEST.isLoaded() && ConfigModCompat.shulkerBoxesIronChest, new ItemShulkerBoxUpgrade()),
+	SHULKER_BOX_UPGRADE(EtFuturum.hasIronChest && ConfigModCompat.shulkerBoxesIronChest, new ItemShulkerBoxUpgrade()),
 	HONEYCOMB(ConfigBlocksItems.enableHoney, new BaseItem("honeycomb")),
 	HONEY_BOTTLE(ConfigBlocksItems.enableHoney, new ItemHoneyBottle()),
-	BAMBOO(ConfigBlocksItems.enableBambooBlocks, new ItemBamboo()),
 
 	OAK_BOAT(ConfigBlocksItems.enableNewBoats && !ConfigBlocksItems.replaceOldBoats, new ItemNewBoat(EntityNewBoat.Type.OAK, false)),
 	OAK_CHEST_BOAT(ConfigBlocksItems.enableNewBoats, new ItemNewBoat(EntityNewBoat.Type.OAK, true)),
@@ -88,7 +85,7 @@ public enum ModItems {
 	MODDED_RAW_ORE(ConfigBlocksItems.enableRawOres, new ItemModdedRawOre()),
 
 	//Debug Item
-	DEBUGGING_TOOL(Reference.TESTING && Reference.DEV_ENVIRONMENT, new DebugTestItem());
+	DEBUGGING_TOOL(EtFuturum.TESTING && EtFuturum.DEV_ENVIRONMENT, new DebugTestItem());
 
 	public static final ModItems[] CHEST_BOATS = new ModItems[]{OAK_CHEST_BOAT, SPRUCE_CHEST_BOAT, BIRCH_CHEST_BOAT, JUNGLE_CHEST_BOAT, ACACIA_CHEST_BOAT, DARK_OAK_CHEST_BOAT};
 	public static final ModItems[] BOATS = new ModItems[]{OAK_BOAT, SPRUCE_BOAT, BIRCH_BOAT, JUNGLE_BOAT, ACACIA_BOAT, DARK_OAK_BOAT};
@@ -103,10 +100,8 @@ public enum ModItems {
 	@Deprecated
 	public static final Item sweet_berries = SWEET_BERRIES.get();
 
-	public static final ModItems[] VALUES = values();
-
 	public static void init() {
-		for (ModItems item : VALUES) {
+		for (ModItems item : values()) {
 			if (item.isEnabled()) { //Honestly what do you think it's doing lmfao
 				GameRegistry.registerItem(item.get(), item.name().toLowerCase());
 			}

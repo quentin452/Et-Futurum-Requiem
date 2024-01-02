@@ -1,11 +1,9 @@
 package ganymedes01.etfuturum.world.nether.dimension;
 
 import cpw.mods.fml.common.eventhandler.Event;
+import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModBlocks;
-import ganymedes01.etfuturum.compat.ExternalContent;
-import ganymedes01.etfuturum.compat.ModsList;
-import ganymedes01.etfuturum.configuration.configs.ConfigMixins;
-import ganymedes01.etfuturum.world.generate.decorate.WorldGenSoulFire;
+import ganymedes01.etfuturum.core.utils.ExternalContent;
 import ganymedes01.etfuturum.world.generate.feature.WorldGenBasaltGlowstone;
 import ganymedes01.etfuturum.world.nether.biome.NetherBiomeBase;
 import ganymedes01.etfuturum.world.nether.biome.utils.NetherBiomeManager;
@@ -79,7 +77,6 @@ public class NetherChunkProvider implements IChunkProvider {
 	private final WorldGenerator glowstone2Gen = new WorldGenGlowStone2();
 	private final WorldGenerator basaltGlowstoneGen = new WorldGenBasaltGlowstone();
 	private final WorldGenerator fireGen = new WorldGenFire();
-	private final WorldGenerator soulFireGen = new WorldGenSoulFire();
 	private final WorldGenerator lavaGen = new WorldGenHellLava(Blocks.flowing_lava, false);
 
 	public NetherChunkProvider(World par1World, long par2) {
@@ -162,7 +159,7 @@ public class NetherChunkProvider implements IChunkProvider {
 									l2 = Blocks.netherrack;
 								}
 
-								if (ModsList.NATURA.isLoaded() && biomegenbase == BiomeGenBase.hell && d15 > 56.0D) {
+								if (EtFuturum.hasNatura && biomegenbase == BiomeGenBase.hell && d15 > 56.0D) {
 									l2 = ExternalContent.Blocks.NATURA_TAINTED_SOIL.get();
 								}
 
@@ -235,7 +232,7 @@ public class NetherChunkProvider implements IChunkProvider {
 				byte topMeta = (byte) biomegenbase.field_150604_aj;
 				byte fillerMeta = (byte) biomegenbase.field_76754_C;
 
-				if (biomegenbase == BiomeGenBase.hell && ModsList.NATURA.isLoaded()) {
+				if (biomegenbase == BiomeGenBase.hell && EtFuturum.hasNatura) {
 					fillerBlock = ExternalContent.Blocks.NATURA_TAINTED_SOIL.get();
 					fillerMeta = 0;
 				}
@@ -281,7 +278,7 @@ public class NetherChunkProvider implements IChunkProvider {
 									}
 									topMeta = (byte) biomegenbase.field_150604_aj;
 
-									if (biomegenbase == BiomeGenBase.hell && ModsList.NATURA.isLoaded()) {
+									if (biomegenbase == BiomeGenBase.hell && EtFuturum.hasNatura) {
 										fillerBlock = ExternalContent.Blocks.NATURA_TAINTED_SOIL.get();
 										fillerMeta = 0;
 									} else {
@@ -304,7 +301,7 @@ public class NetherChunkProvider implements IChunkProvider {
 									}
 
 									if (soulSandFlag) {
-										if (ModsList.NATURA.isLoaded()) {
+										if (EtFuturum.hasNatura) {
 											fillerBlock = ExternalContent.Blocks.NATURA_HEAT_SAND.get();
 										} else {
 											fillerBlock = Blocks.soul_sand;
@@ -565,7 +562,7 @@ public class NetherChunkProvider implements IChunkProvider {
 				k1 = k + hellRNG.nextInt(16) + 8;
 				l1 = hellRNG.nextInt(120) + 4;
 				i2 = l + hellRNG.nextInt(16) + 8;
-				(biome == NetherBiomeManager.soulSandValley && ConfigMixins.soulFire ? soulFireGen : fireGen).generate(worldObj, hellRNG, k1, l1, i2);
+				fireGen.generate(worldObj, hellRNG, k1, l1, i2);
 			}
 		}
 
@@ -599,7 +596,7 @@ public class NetherChunkProvider implements IChunkProvider {
 			}
 		}
 
-		if (!ModsList.NATURA.isLoaded()) {
+		if (!EtFuturum.hasNatura) {
 			MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(worldObj, hellRNG, k, l));
 			doGen = TerrainGen.decorate(worldObj, hellRNG, k, l, SHROOM);
 			if (doGen) {

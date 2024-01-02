@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.blocks.itemblocks.ItemBlockBanner;
-import ganymedes01.etfuturum.lib.EnumColor;
+import ganymedes01.etfuturum.lib.EnumColour;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -24,7 +24,7 @@ public class TileEntityBanner extends TileEntity {
 	private NBTTagList patterns;
 	private boolean field_175119_g;
 	private List<EnumBannerPattern> patternList;
-	private List<EnumColor> colorList;
+	private List<EnumColour> colorList;
 	private String field_175121_j;
 	public boolean isStanding;
 
@@ -106,7 +106,7 @@ public class TileEntityBanner extends TileEntity {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public List<EnumColor> getColorList() {
+	public List<EnumColour> getColorList() {
 		initializeBannerData();
 		return colorList;
 	}
@@ -145,7 +145,7 @@ public class TileEntityBanner extends TileEntity {
 				patternList = Lists.newArrayList();
 				colorList = Lists.newArrayList();
 				patternList.add(TileEntityBanner.EnumBannerPattern.BASE);
-				colorList.add(EnumColor.fromDamage(baseColor));
+				colorList.add(EnumColour.fromDamage(baseColor));
 				field_175121_j = "b" + baseColor;
 
 				if (patterns != null)
@@ -156,7 +156,7 @@ public class TileEntityBanner extends TileEntity {
 						if (pattern != null) {
 							patternList.add(pattern);
 							int j = nbttagcompound.getInteger("Color");
-							colorList.add(EnumColor.fromDamage(j));
+							colorList.add(EnumColour.fromDamage(j));
 							field_175121_j = field_175121_j + pattern.getPatternID() + j;
 						}
 					}
@@ -215,8 +215,6 @@ public class TileEntityBanner extends TileEntity {
 		SKULL("skull", "sku", new ItemStack(Items.skull, 1, 1)),
 		FLOWER("flower", "flo", new ItemStack(Blocks.red_flower, 1, 8)),
 		MOJANG("mojang", "moj", new ItemStack(Items.golden_apple, 1, 1));
-
-		public static final EnumBannerPattern[] VALUES = values();
 
 		private final String patternName;
 		private final String patternID;

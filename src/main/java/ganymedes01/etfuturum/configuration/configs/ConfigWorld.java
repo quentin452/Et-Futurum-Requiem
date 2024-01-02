@@ -1,11 +1,11 @@
 package ganymedes01.etfuturum.configuration.configs;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.api.mappings.RegistryMapping;
-import ganymedes01.etfuturum.compat.ExternalContent;
-import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.ConfigBase;
+import ganymedes01.etfuturum.core.utils.ExternalContent;
 import ganymedes01.etfuturum.core.utils.Logger;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.config.Property;
@@ -54,7 +54,6 @@ public class ConfigWorld extends ConfigBase {
 	public static int amethystMaxY;
 	public static int[] amethystDimensionBlacklist;
 	public static boolean amethystDimensionBlacklistAsWhitelist;
-	public static int cherryTreeRarity;
 
 	public static int crimsonForestID;
 	public static int warpedForestID;
@@ -168,9 +167,8 @@ public class ConfigWorld extends ConfigBase {
 		amethystBlacklistProp.comment = "What dimensions should we ban amethyst geodes from generating in?";
 		amethystDimensionBlacklist = amethystBlacklistProp.getIntList();
 		amethystDimensionBlacklistAsWhitelist = getBoolean("amethystDimensionBlacklistAsWhitelist", catGeneration, false, "Treat the amethyst dimension blacklist as a whitelist instead, so geodes will ONLY generate in those dimensions, instead of excluding those dimensions from generation.");
-		amethystRarity = getInt("amethystRarity", catGeneration, 53, 1, Byte.MAX_VALUE, "How rare should amethyst geodes be? 1/x chance per chunk, 1 means a geode attempts to appear every chunk");
+		amethystRarity = getInt("amethystRarity", catGeneration, 53, 1, 128, "How rare should amethyst geodes be? 1/x chance per chunk, 1 means a geode attempts to appear every chunk");
 		amethystMaxY = getInt("amethystMaxY", catGeneration, 46, 6, 245, "Max Y level amethyst geodes should attempt to generate at");
-		cherryTreeRarity = getInt("cherryTreeRarity", catGeneration, 72, 0, Byte.MAX_VALUE, "How rare should cherry trees be? 1/x chance per chunk, 1 means a tree attempts to appear every chunk. 0 = no cherry trees. They will spawn in mountain-type biomes.");
 
 		crimsonForestID = getInt("crimsonForestID", catBiomes, 200, -1, 65536, "Set to -1 to disable the generation of Crimson Forests. To use an ID above 255, EndlessIDs is required.");
 		warpedForestID = getInt("warpedForestID", catBiomes, 201, -1, 65536, "Set to -1 to disable the generation of Warped Forests. To use an ID above 255, EndlessIDs is required.");
@@ -194,7 +192,7 @@ public class ConfigWorld extends ConfigBase {
 	@Override
 	protected void initValues() {
 		if (enableFossils) {
-			if (ModsList.NETHERLICIOUS.isLoaded() && fossilBlockID.equals("etfuturum:bone_block") && !ModBlocks.BONE.isEnabled()) {
+			if (EtFuturum.hasNetherlicious && fossilBlockID.equals("etfuturum:bone_block") && !ModBlocks.BONE.isEnabled()) {
 				fossilBlock = new RegistryMapping<>(ExternalContent.Blocks.NETHERLICIOUS_BONE_BLOCK.get(), 0);
 			} else {
 				String[] fossilBlockArray = fossilBlockID.split(":");
@@ -228,11 +226,11 @@ public class ConfigWorld extends ConfigBase {
 					try {
 						meta = Integer.parseInt(amethystOuterBlockArray[2]);
 					} catch (NumberFormatException e) {
-						Logger.error("Specified block for amethystOuterLayer: " + amethystOuterBlockID + " has invalid metadata specified! (Not an integer)");
+						Logger.error("Specified bone block for amethystOuters: " + amethystOuterBlockID + " has invalid metadata specified! (Not an integer)");
 						Logger.error("Defaulting to 0.");
 					}
 					if (meta > 15 || meta < 0) {
-						Logger.error("Specified block for amethystOuterLayer: " + amethystOuterBlockID + " has invalid metadata specified! (Value cannot be greater than 15 or lower than 0)");
+						Logger.error("Specified bone block for amethystOuters: " + amethystOuterBlockID + " has invalid metadata specified! (Value cannot be greater than 15 or lower than 0)");
 						Logger.error("Defaulting to 0.");
 						meta = 0;
 					}
@@ -249,11 +247,11 @@ public class ConfigWorld extends ConfigBase {
 					try {
 						meta = Integer.parseInt(amethystMiddleBlockArray[2]);
 					} catch (NumberFormatException e) {
-						Logger.error("Specified block for amethystMiddleLayer: " + amethystMiddleBlockID + " has invalid metadata specified! (Not an integer)");
+						Logger.error("Specified amethyst middle layer block: " + amethystMiddleBlockID + " has invalid metadata specified! (Not an integer)");
 						Logger.error("Defaulting to 0.");
 					}
 					if (meta > 15 || meta < 0) {
-						Logger.error("Specified block for amethystMiddleLayer: " + amethystMiddleBlockID + " has invalid metadata specified! (Value cannot be greater than 15 or lower than 0)");
+						Logger.error("Specified amethyst middle layer block: " + amethystMiddleBlockID + " has invalid metadata specified! (Value cannot be greater than 15 or lower than 0)");
 						Logger.error("Defaulting to 0.");
 						meta = 0;
 					}

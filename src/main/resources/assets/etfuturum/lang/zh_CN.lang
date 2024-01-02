@@ -37,9 +37,6 @@ container.enchant.level.required=等级要求
 container.enchant.level.one=+ 1级经验
 container.enchant.level.many=+ %d级经验
 container.enchant.clue=%s…？
-container.etfuturum.blast_furnace=高炉
-container.etfuturum.smoker=烟熏炉
-container.etfuturum.barrel=木桶
 container.etfuturum.shulker_box=潜影盒
 container.etfuturum.chest_boat=运输船
 
@@ -361,7 +358,6 @@ item.etfuturum.shulker_shell.name=潜影壳
 item.etfuturum.amethyst_shard.name=紫水晶碎片
 item.etfuturum.honeycomb.name=蜜脾
 item.etfuturum.honey_bottle.name=蜂蜜瓶
-item.etfuturum.bamboo.name=竹子
 
 # Arrows
 item.etfuturum.tipped_arrow.name=药箭
@@ -403,9 +399,6 @@ item.etfuturum.raw_uranium.name=粗铀
 item.etfuturum.raw_thorium.name=粗钍
 item.etfuturum.raw_tungsten.name=粗钨
 item.etfuturum.raw_titanium.name=粗钛
-item.etfuturum.raw_zinc.name=粗锌
-item.etfuturum.raw_magnesium.name=粗镁
-item.etfuturum.raw_boron.name=粗硼
 
 # Blocks
 tile.etfuturum.granite.name=花岗岩
@@ -617,15 +610,13 @@ tile.etfuturum.lantern.name=灯笼
 tile.etfuturum.observer.name=侦测器
 tile.etfuturum.target.name=标靶
 
-tile.etfuturum.prismarine_slab.name=海晶石台阶
-tile.etfuturum.prismarine_brick_slab.name=海晶石砖台阶
-tile.etfuturum.dark_prismarine_slab.name=暗海晶石台阶
+tile.etfuturum.prismarine_stairs.name=海晶石楼梯
+tile.etfuturum.prismarine_brick_stairs.name=海晶石砖楼梯
+tile.etfuturum.dark_prismarine_stairs.name=暗海晶石楼梯
 
 tile.etfuturum.mud.name=泥巴
 tile.etfuturum.packed_mud.name=泥坯
 tile.etfuturum.mud_bricks.name=泥砖
-
-tile.etfuturum.mangrove_roots.name=红树根
 tile.etfuturum.muddy_mangrove_roots.name=沾泥的红树根
 tile.etfuturum.mud_brick_stairs.name=泥砖楼梯
 tile.etfuturum.mud_brick_slab.name=泥砖台阶
@@ -660,23 +651,12 @@ tile.etfuturum.blackstone_wall.name=黑石墙
 tile.etfuturum.polished_blackstone_wall.name=磨制黑石墙
 tile.etfuturum.polished_blackstone_brick_wall.name=磨制黑石砖墙
 
-tile.etfuturum.prismarine_stairs.name=海晶石楼梯
-tile.etfuturum.prismarine_brick_stairs.name=海晶石砖楼梯
-tile.etfuturum.dark_prismarine_stairs.name=暗海晶石楼梯
-
-tile.etfuturum.pink_petals.name=粉红色花簇
-
-tile.etfuturum.mangrove_propagule.name=红树胎生苗
-tile.etfuturum.cherry_sapling.name=樱花树苗
+tile.etfuturum.prismarine_slab.name=海晶石台阶
+tile.etfuturum.prismarine_brick_slab.name=海晶石砖台阶
+tile.etfuturum.dark_prismarine_slab.name=暗海晶石台阶
 
 tile.etfuturum.azalea.name=杜鹃花丛
 tile.etfuturum.flowering_azalea.name=盛开的杜鹃花丛
-
-tile.etfuturum.azalea_leaves.name=杜鹃树叶
-tile.etfuturum.flowering_azalea_leaves.name=盛开的杜鹃树叶
-
-tile.etfuturum.mangrove_leaves.name=红树树叶
-tile.etfuturum.cherry_leaves.name=樱花树叶
 
 tile.etfuturum.crimson_stem.name=绯红菌柄
 tile.etfuturum.warped_stem.name=诡异菌柄
@@ -1076,9 +1056,6 @@ tile.etfuturum.raw_uranium_block.name=粗铀块
 tile.etfuturum.raw_thorium_block.name=粗钍块
 tile.etfuturum.raw_tungsten_block.name=粗钨块
 tile.etfuturum.raw_titanium_block.name=粗钛块
-tile.etfuturum.raw_zinc_block.name=粗锌块
-tile.etfuturum.raw_magnesium_block.name=粗镁块
-tile.etfuturum.raw_boron_block.name=粗硼块
 
 tile.etfuturum.deepslate_aluminum_ore.name=深层铝矿石
 tile.etfuturum.deepslate_tin_ore.name=深层锡矿石
@@ -1090,9 +1067,6 @@ tile.etfuturum.deepslate_mythril_ore.name=深层秘银矿石
 tile.etfuturum.deepslate_uranium_ore.name=深层铀矿石
 tile.etfuturum.deepslate_tungsten_ore.name=深层钨矿石
 tile.etfuturum.deepslate_titanium_ore.name=深层钛矿石
-tile.etfuturum.deepslate_zinc_ore.name=深层锌矿石
-tile.etfuturum.deepslate_magnesium_ore.name=深层镁矿石
-tile.etfuturum.deepslate_boron_ore.name=深层硼矿石
 
 tile.etfuturum.deepslate_certus_quartz_ore.name=深层赛特斯石英矿石
 tile.etfuturum.deepslate_charged_certus_quartz_ore.name=深层充能赛特斯石英矿石
@@ -1799,7 +1773,7 @@ efr.warn.prerelease.version=§c§l[Debug]: §r您正在使用预发布版本的�
 efr.log.prerelease.version=警告:Et Futurum Requiem的预发布版本正在使用中!这个版本可能不稳定，预计会有比平时更多的bug。
 efr.warn.prerelease.version.bugs=请务必在https://github.com/Roadhog360/Et-Futurum-Requiem/issues上报告bug
 efr.critical.badbetterfpsalgorithm1=§4§1[CRITICAL]:§bBetterFPS§配置了一个糟糕的数学算法。
-efr.critical.badbetterfpsalgorithm2=不应该使用“rivens-half”或“taylors”来对你的世界造成损害。强烈建议您进入其配置并将“algorithm”更改为其他内容，最好是“vanilla”。
+efr.critical.badbetterfpsalgorithm2=不应该使用“rivens-half”或“taylors”来对你的世界造成损害。强烈建议您进入其配置并将“算法”更改为其他内容，最好是“vanilla”。
 efr.critical.badbetterfpsalgorithm3=之所以向您展示这一点，是因为前面提到的数学算法有缺陷，会生成不正确的数字，从而可能节省成本。
 efr.elytra.flight.disabled=为了您的安全，鞘翅飞行已被禁用。
 efr.elytra.betterfps.warn1=§cBetterFPS配置不佳。

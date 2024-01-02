@@ -1,6 +1,8 @@
 package ganymedes01.etfuturum.core.handlers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -21,12 +23,8 @@ import ganymedes01.etfuturum.api.mappings.RegistryMapping;
 import ganymedes01.etfuturum.blocks.BlockHoney;
 import ganymedes01.etfuturum.blocks.BlockMagma;
 import ganymedes01.etfuturum.client.sound.ModSounds;
-import ganymedes01.etfuturum.compat.ExternalContent;
-import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.configs.*;
-import ganymedes01.etfuturum.core.utils.ItemStackMap;
-import ganymedes01.etfuturum.core.utils.ItemStackSet;
-import ganymedes01.etfuturum.core.utils.Utils;
+import ganymedes01.etfuturum.core.utils.ExternalContent;
 import ganymedes01.etfuturum.elytra.IElytraEntityTrackerEntry;
 import ganymedes01.etfuturum.elytra.IElytraPlayer;
 import ganymedes01.etfuturum.entities.*;
@@ -1014,7 +1012,7 @@ public class ServerEventHandler {
 
 	private boolean doMudConversion(World world, int x, int y, int z, EntityPlayer player, Block oldBlock, int meta, ItemStack heldStack) {
 		boolean isValid = heldStack.getItem() == Items.potionitem && heldStack.getItemDamage() == 0 && Items.potionitem.getEffects(heldStack) == null;
-		if (!isValid && ModsList.EXTRA_UTILITIES.isLoaded()) {
+		if (!isValid && EtFuturum.hasExtraUtils) {
 			int itemDamage = heldStack.getItemDamage();
 			isValid = heldStack.getItem() == ExternalContent.Items.EXTRAUTILS_WATERING_CAN.get() && (itemDamage == 0 || itemDamage == 3);
 		}
@@ -1124,18 +1122,16 @@ public class ServerEventHandler {
 		}
 
 		Random rand = event.entityLiving.worldObj.rand;
-		if (ModItems.MUTTON_RAW.isEnabled() && ModItems.MUTTON_COOKED.isEnabled()
-				&& event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot") && event.entityLiving instanceof EntitySheep) {
+		if (ConfigBlocksItems.enableMutton && event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot") && event.entityLiving instanceof EntitySheep) {
 			int amount = rand.nextInt(3) + 1 + rand.nextInt(1 + event.lootingLevel);
 			for (int i = 0; i < amount; i++)
-				if (event.entityLiving.isBurning()) {
+				if (event.entityLiving.isBurning())
 					addDrop(new ItemStack(ModItems.MUTTON_COOKED.get()), event.entityLiving, event.drops);
-				} else {
+				else
 					addDrop(new ItemStack(ModItems.MUTTON_RAW.get()), event.entityLiving, event.drops);
-				}
 		}
 
-		if (ModBlocks.WITHER_ROSE.isEnabled() && event.entity instanceof EntityLivingBase && event.source.getEntity() instanceof EntityWither) {
+		if (ConfigBlocksItems.enableWitherRose && event.entity instanceof EntityLivingBase && event.source.getEntity() instanceof EntityWither) {
 			World world = event.entity.worldObj;
 			Entity entity = event.entity;
 			if (world.getGameRules().getGameRuleBooleanValue("mobGriefing") && ModBlocks.WITHER_ROSE.get().canPlaceBlockAt(world, (int) entity.posX, (int) entity.posY, (int) entity.posZ)) {
@@ -1226,7 +1222,7 @@ public class ServerEventHandler {
 			if (ConfigTweaks.spawnAnywhereShulkerColors) {
 				World world = event.world;
 
-				for (EnumFacing facing : Utils.ENUM_FACING_VALUES) {
+				for (EnumFacing facing : EnumFacing.values()) {
 					Block block = world.getBlock(x + facing.getFrontOffsetX(), y + facing.getFrontOffsetY(), z + facing.getFrontOffsetZ());
 					byte color = -1;
 					int meta = world.getBlockMetadata(x + facing.getFrontOffsetX(), y + facing.getFrontOffsetY(), z + facing.getFrontOffsetZ());
@@ -1334,6 +1330,22 @@ public class ServerEventHandler {
 				}
 //				((EntitySkeleton)event.entity).addRandomArmor();
 //				((EntitySkeleton)event.entity).enchantEquipment(); //Grrr, ATs refuse to apply to these for some reason, keeps throwing damn errors
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void spawnEvent(LivingSpawnEvent.CheckSpawn event) {
+		if (event.world.provider instanceof WorldProviderHell) {
+			int x = MathHelper.floor_double(event.x);
+			int y = MathHelper.floor_double(event.y);
+			int z = MathHelper.floor_double(event.z);
+			World world = event.world;
+
+			if (world.getBlock(x, y - 1, z) == ModBlocks.NETHER_WART.get() && world.getBlockMetadata(x, y - 1, z) == 0) {
+				if (!(event.entity instanceof EntityFlying)) {
+					event.setResult(Result.DENY);
+				}
 			}
 		}
 	}
@@ -1846,7 +1858,18 @@ public class ServerEventHandler {
 		if (ConfigMixins.enableElytra && e.phase == TickEvent.Phase.END && e.world instanceof WorldServer) {
 			WorldServer ws = (WorldServer) e.world;
 			for (EntityTrackerEntry ete : (Set<EntityTrackerEntry>) ws.getEntityTracker().trackedEntities) {
-				handleElytraPlayer(ete, e);
+				if (ete != null && ete.myEntity instanceof IElytraPlayer) {
+					IElytraPlayer elb = (IElytraPlayer) ete.myEntity;
+					boolean flying = elb.etfu$isElytraFlying();
+					if (!flying && ((IElytraEntityTrackerEntry) ete).etfu$getWasSendingVelUpdates()) {
+						ete.sendVelocityUpdates = false;
+					} else if (flying) {
+						if (!ete.sendVelocityUpdates) {
+							((IElytraEntityTrackerEntry) ete).etfu$setWasSendingVelUpdates(true);
+						}
+						ete.sendVelocityUpdates = true;
+					}
+				}
 			}
 		}
 
@@ -1854,77 +1877,41 @@ public class ServerEventHandler {
 			DoWeatherCycleHelper.INSTANCE.isWorldTickInProgress = false;
 		}
 	}
-	private void handleElytraPlayer(EntityTrackerEntry ete, TickEvent.WorldTickEvent e) {
-		if (ete.myEntity instanceof IElytraPlayer) {
-			IElytraPlayer elb = (IElytraPlayer) ete.myEntity;
-			boolean flying = elb.etfu$isElytraFlying();
-			boolean wasSendingVelUpdates = ((IElytraEntityTrackerEntry) ete).etfu$getWasSendingVelUpdates();
 
-			if (!flying && wasSendingVelUpdates) {
-				ete.sendVelocityUpdates = false;
-			} else if (flying) {
-				if (!ete.sendVelocityUpdates) {
-					((IElytraEntityTrackerEntry) ete).etfu$setWasSendingVelUpdates(true);
-				}
-				ete.sendVelocityUpdates = true;
-			}
-		}
-	}
-	private final ItemStackSet NO_BURN_ITEMS = new ItemStackSet();
-	private final ItemStackMap<Integer> BURN_TIME_REMAPPING = new ItemStackMap<>();
+	private final Map<Item, List<Integer>> NO_BURN_ITEMS = Maps.newHashMap();
 
 	@SubscribeEvent
 	public void fuelBurnTime(FuelBurnTimeEvent e) {
-		if (e.fuel == null || e.fuel.getItem() == null || Item.itemRegistry.getNameForObject(e.fuel.getItem()) == null)
-			return;
+		if (e.fuel == null) return;
 
 		if (NO_BURN_ITEMS.isEmpty()) {
-			NO_BURN_ITEMS.add(ModBlocks.WOOD_PLANKS.newItemStack(1, 0));
-			NO_BURN_ITEMS.add(ModBlocks.WOOD_PLANKS.newItemStack(1, 1));
-			NO_BURN_ITEMS.add(ModBlocks.WOOD_FENCE.newItemStack(1, 0));
-			NO_BURN_ITEMS.add(ModBlocks.WOOD_FENCE.newItemStack(1, 1));
+			NO_BURN_ITEMS.put(ModBlocks.WOOD_PLANKS.getItem(), ImmutableList.of(0, 1));
+			NO_BURN_ITEMS.put(ModBlocks.WOOD_FENCE.getItem(), ImmutableList.of(0, 1));
+			NO_BURN_ITEMS.put(ModBlocks.WOOD_SLAB.getItem(), ImmutableList.of(0, 1, 8, 9));
+			NO_BURN_ITEMS.put(ModBlocks.DOUBLE_WOOD_SLAB.getItem(), ImmutableList.of(0, 1, 8, 9));
 
-			NO_BURN_ITEMS.add(ModBlocks.WOOD_SLAB.newItemStack(1, 0));
-			NO_BURN_ITEMS.add(ModBlocks.WOOD_SLAB.newItemStack(1, 1));
-			NO_BURN_ITEMS.add(ModBlocks.WOOD_SLAB.newItemStack(1, 8));
-			NO_BURN_ITEMS.add(ModBlocks.WOOD_SLAB.newItemStack(1, 9));
-
-			NO_BURN_ITEMS.add(ModBlocks.DOUBLE_WOOD_SLAB.newItemStack(1, 0));
-			NO_BURN_ITEMS.add(ModBlocks.DOUBLE_WOOD_SLAB.newItemStack(1, 1));
-			NO_BURN_ITEMS.add(ModBlocks.DOUBLE_WOOD_SLAB.newItemStack(1, 8));
-			NO_BURN_ITEMS.add(ModBlocks.DOUBLE_WOOD_SLAB.newItemStack(1, 9));
-
-			NO_BURN_ITEMS.add(ModBlocks.CRIMSON_STEM.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.WARPED_STEM.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.CRIMSON_STAIRS.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.WARPED_STAIRS.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.CRIMSON_FENCE_GATE.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.WARPED_FENCE_GATE.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.CRIMSON_BUTTON.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.WARPED_BUTTON.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.CRIMSON_PRESSURE_PLATE.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.WARPED_PRESSURE_PLATE.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.CRIMSON_DOOR.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.WARPED_DOOR.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.CRIMSON_TRAPDOOR.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.WARPED_TRAPDOOR.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.CRIMSON_SIGN.newItemStack(1, OreDictionary.WILDCARD_VALUE));
-			NO_BURN_ITEMS.add(ModBlocks.WARPED_SIGN.newItemStack(1, OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.CRIMSON_STEM.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.WARPED_STEM.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.CRIMSON_STAIRS.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.WARPED_STAIRS.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.CRIMSON_FENCE_GATE.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.WARPED_FENCE_GATE.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.CRIMSON_BUTTON.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.WARPED_BUTTON.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.CRIMSON_PRESSURE_PLATE.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.WARPED_PRESSURE_PLATE.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.CRIMSON_DOOR.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.WARPED_DOOR.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.CRIMSON_TRAPDOOR.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.WARPED_TRAPDOOR.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.CRIMSON_SIGN.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
+			NO_BURN_ITEMS.put(ModBlocks.WARPED_SIGN.getItem(), ImmutableList.of(OreDictionary.WILDCARD_VALUE));
 		}
-		if (NO_BURN_ITEMS.contains(e.fuel)) {
-			e.burnTime = 0;
-			e.setResult(Result.DENY);
-			return;
-		}
-
-		if (BURN_TIME_REMAPPING.isEmpty()) {
-			BURN_TIME_REMAPPING.put(ModItems.BAMBOO.newItemStack(1, OreDictionary.WILDCARD_VALUE), 50);
-		}
-
-		Integer time = BURN_TIME_REMAPPING.get(e.fuel);
-		if (time != null) {
-			e.burnTime = time;
-			e.setResult(Result.ALLOW);
+		if (NO_BURN_ITEMS.containsKey(e.fuel.getItem())) {
+			if (NO_BURN_ITEMS.get(e.fuel.getItem()).contains(OreDictionary.WILDCARD_VALUE) || NO_BURN_ITEMS.get(e.fuel.getItem()).contains(e.fuel.getItemDamage())) {
+				e.burnTime = 0;
+				e.setResult(Result.DENY);
+			}
 		}
 	}
 

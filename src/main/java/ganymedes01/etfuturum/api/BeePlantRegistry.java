@@ -29,7 +29,7 @@ public class BeePlantRegistry {
 			throw new IllegalArgumentException("BlockDoublePlant can't have meta greater than 7, 8 and above are used by the top half. Bees will go to the top half if the bottom meta is valid.");
 		}
 		if (ModRecipes.validateItems(block)) {
-			BEE_FLOWERS.add(RegistryMapping.getKeyFor(block, meta));
+			BEE_FLOWERS.add(new RegistryMapping<>(block, meta));
 		}
 	}
 
@@ -41,7 +41,7 @@ public class BeePlantRegistry {
 	}
 
 	public static void removeFlower(Block block, int meta) {
-		BEE_FLOWERS.remove(RegistryMapping.getKeyFor(block, meta));
+		BEE_FLOWERS.remove(new RegistryMapping<>(block, meta));
 	}
 
 	public static void removeCrop(Block block) {
@@ -49,7 +49,7 @@ public class BeePlantRegistry {
 	}
 
 	public static boolean isFlower(Block block, int meta) {
-		return BEE_FLOWERS.contains(RegistryMapping.getKeyFor(block, meta));
+		return BEE_FLOWERS.contains(new RegistryMapping<>(block, meta));
 	}
 
 	public static boolean isCrop(Block block) {
@@ -73,21 +73,7 @@ public class BeePlantRegistry {
 			addFlower(Blocks.double_plant, 5);
 
 			addFlower(ModBlocks.AZALEA.get(), 1);
-			addFlower(ModBlocks.AZALEA.get(), 9);
-			addFlower(ModBlocks.AZALEA_LEAVES.get(), 1);
-			addFlower(ModBlocks.AZALEA_LEAVES.get(), 5);
-			addFlower(ModBlocks.AZALEA_LEAVES.get(), 9);
-			addFlower(ModBlocks.AZALEA_LEAVES.get(), 13);
-
-			addFlower(ModBlocks.SAPLING.get(), 0); //Mangrove propagule
-			addFlower(ModBlocks.SAPLING.get(), 8);
-
-			addFlower(ModBlocks.LEAVES.get(), 1); //Cherry leaves
-			addFlower(ModBlocks.LEAVES.get(), 5);
-			addFlower(ModBlocks.LEAVES.get(), 9);
-			addFlower(ModBlocks.LEAVES.get(), 13);
-
-			//TODO: This should have pink petals, and spore blossoms as flowers, when added
+			//TODO: This should have flowering azalea leaves, cherry leaves, pink petals, mangrove propagules, and spore blossoms as flowers, when added
 		}
 	}
 }
