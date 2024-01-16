@@ -58,9 +58,14 @@ public class TileEntityFancySkullRenderer extends TileEntitySpecialRenderer {
 				ResourceLocation texture = AbstractClientPlayer.locationStevePng;
 				if (profile != null) {
 					Minecraft minecraft = Minecraft.getMinecraft();
-					Map<Type, MinecraftProfileTexture> map = minecraft.func_152342_ad().func_152788_a(profile);
-					if (map.containsKey(Type.SKIN))
+					try {
+						Map<Type, MinecraftProfileTexture> map = minecraft.func_152342_ad().func_152788_a(profile);
+
+						if (map.containsKey(Type.SKIN))
 						texture = minecraft.func_152342_ad().func_152792_a(map.get(Type.SKIN), Type.SKIN);
+					} catch(NoSuchMethodError e) {
+						return;
+					}
 				}
 				bindTexture(texture);
 				break;
