@@ -255,15 +255,13 @@ public class ServerEventHandler {
 		}
 
 
-		if (ConfigBlocksItems.enableNewBoats && ConfigBlocksItems.replaceOldBoats) {
-			if (event.entity.getClass() == EntityBoat.class) {
+		if (ConfigBlocksItems.enableNewBoats && ConfigBlocksItems.replaceOldBoats && (event.entity.getClass() == EntityBoat.class)) {
 				EntityNewBoat boat = new EntityNewBoat(event.world);
 				event.entity.rotationYaw += 90;
 				replaceEntity(event.entity, boat, event.world, chunk);
 				boat.setBoatType(EntityNewBoat.Type.OAK);
 				event.setCanceled(true);
 				return;
-			}
 		}
 
 		if (ConfigEntities.enableVillagerZombies && event.entity.getClass() == EntityZombie.class && ((EntityZombie) event.entity).isVillager()) {
@@ -295,13 +293,14 @@ public class ServerEventHandler {
 
 	private void replaceEntity(Entity oldEntity, Entity newEntity, World world, Chunk chunk) {
 		newEntity.copyDataFrom(oldEntity, true);
-		if (loadedChunks.contains(chunk)) { // Use this list because somehow chunk.isChunkLoaded is always true here...
-			// World#addLoadedEntities has already run for the chunk, we don't have to worry about conflicting with it
+
+		if (chunk.isChunkLoaded) {
 			world.spawnEntityInWorld(newEntity);
 		} else {
 			// don't add to tracker, because World#addLoadedEntities will also do it
 			chunk.addEntity(newEntity);
 		}
+
 		oldEntity.setDead();
 	}
 
@@ -1213,19 +1212,27 @@ public class ServerEventHandler {
 		if (!(event.entity instanceof EntityLiving)) {
 			return;
 		}
+
 		int x = MathHelper.floor_double(event.x);
 		int y = MathHelper.floor_double(event.y);
 		int z = MathHelper.floor_double(event.z);
-		if (event.entityLiving instanceof EntityShulker) {
-			EntityShulker shulker = ((EntityShulker) event.entityLiving);
-			shulker.persistenceRequired = false;
-			if (ConfigTweaks.spawnAnywhereShulkerColors) {
-				World world = event.world;
 
+		World world = event.world;
+		Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
+
+		if (event.entityLiving instanceof EntityShulker) {
+			EntityShulker shulker = (EntityShulker) event.entityLiving;
+			shulker.persistenceRequired = false;
+
+			if (ConfigTweaks.spawnAnywhereShulkerColors) {
 				for (EnumFacing facing : EnumFacing.values()) {
-					Block block = world.getBlock(x + facing.getFrontOffsetX(), y + facing.getFrontOffsetY(), z + facing.getFrontOffsetZ());
+					int offX = x + facing.getFrontOffsetX();
+					int offY = y + facing.getFrontOffsetY();
+					int offZ = z + facing.getFrontOffsetZ();
+
+					Block block = world.getBlock(offX, offY, offZ);
 					byte color = -1;
-					int meta = world.getBlockMetadata(x + facing.getFrontOffsetX(), y + facing.getFrontOffsetY(), z + facing.getFrontOffsetZ());
+					int meta = world.getBlockMetadata(offX, offY, offZ);
 
 					if (facing == EnumFacing.DOWN && block == ExternalContent.Blocks.HEE_END_STONE.get()) {
 						color = (byte) (meta == 2 ? 10 : meta == 1 ? 1 : 14);
@@ -1241,20 +1248,20 @@ public class ServerEventHandler {
 					}
 				}
 			}
-		} else if (ConfigEntities.enableStray && !ConfigWorld.oldStraySpawning && EntityList.getEntityID(event.entity) == 51 /*Skeleton ID*/ && event.world.rand.nextFloat() < .80F && event.world.canBlockSeeTheSky(x, y + 1, z)) {
-			BiomeDictionary.Type[] biomeTags = BiomeDictionary.getTypesForBiome(event.world.getBiomeGenForCoords(x, z));
+		} else if (ConfigEntities.enableStray && !ConfigWorld.oldStraySpawning && EntityList.getEntityID(event.entity) == 51 && event.world.rand.nextFloat() < .80F && event.world.canBlockSeeTheSky(x, y + 1, z)) {
+			BiomeDictionary.Type[] biomeTags = BiomeDictionary.getTypesForBiome(world.getBiomeGenForCoords(x, z));
 			if (ArrayUtils.contains(biomeTags, BiomeDictionary.Type.SNOWY)) {
-				EntityStray stray = new EntityStray(event.world);
-				replaceEntity(event.entity, stray, event.world, event.world.getChunkFromChunkCoords(x, z));
+				EntityStray stray = new EntityStray(world);
+				replaceEntity(event.entity, stray, world, chunk);
 				stray.onSpawnWithEgg(null);
 				event.setCanceled(true);
 				event.setResult(Result.DENY);
 			}
-		} else if (ConfigEntities.enableHusk && !ConfigWorld.oldHuskSpawning && EntityList.getEntityID(event.entity) == 54 /*Zombie ID*/ && event.world.rand.nextFloat() < .80F && event.world.canBlockSeeTheSky(x, y + 1, z)) {
-			BiomeDictionary.Type[] biomeTags = BiomeDictionary.getTypesForBiome(event.world.getBiomeGenForCoords(x, z));
+		} else if (ConfigEntities.enableHusk && !ConfigWorld.oldHuskSpawning && EntityList.getEntityID(event.entity) == 54 && event.world.rand.nextFloat() < .80F && event.world.canBlockSeeTheSky(x, y + 1, z)) {
+			BiomeDictionary.Type[] biomeTags = BiomeDictionary.getTypesForBiome(world.getBiomeGenForCoords(x, z));
 			if (ArrayUtils.contains(biomeTags, BiomeDictionary.Type.HOT) && ArrayUtils.contains(biomeTags, BiomeDictionary.Type.DRY) && ArrayUtils.contains(biomeTags, BiomeDictionary.Type.SANDY)) {
-				EntityHusk husk = new EntityHusk(event.world);
-				replaceEntity(event.entity, husk, event.world, event.world.getChunkFromChunkCoords(x, z));
+				EntityHusk husk = new EntityHusk(world);
+				replaceEntity(event.entity, husk, world, chunk);
 				husk.onSpawnWithEgg(null);
 				event.setCanceled(true);
 				event.setResult(Result.DENY);
@@ -1262,9 +1269,10 @@ public class ServerEventHandler {
 		}
 	}
 
+
 	private Method addRandomArmorMethod;
 	private Method enchantEquipmentMethod;
-	private Map<Class<? extends IChunkProvider>, Field[]> chunkProviderFieldsCache = new WeakHashMap<>();
+	private final Map<Class<? extends IChunkProvider>, Field[]> chunkProviderFieldsCache = new WeakHashMap<>();
 
 	@SubscribeEvent
 	public void naturalSpawnEvent(LivingPackSizeEvent event) {
