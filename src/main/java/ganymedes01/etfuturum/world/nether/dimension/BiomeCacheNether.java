@@ -4,6 +4,7 @@ import net.minecraft.util.LongHashMap;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class BiomeCacheNether {
@@ -66,19 +67,19 @@ public class BiomeCacheNether {
 	 * least 30 seconds.
 	 */
 	public void cleanupCache() {
-		long var1 = System.currentTimeMillis();
+		long var1 = System.nanoTime();
 		long var3 = var1 - lastCleanupTime;
 
 		if (var3 > 7500L || var3 < 0L) {
 			lastCleanupTime = var1;
 
-			for (int var5 = 0; var5 < cache.size(); ++var5) {
-				BiomeCacheBlockNether var6 = (BiomeCacheBlockNether) cache.get(var5);
-				long var7 = var1 - var6.lastAccessTime;
-
+			Iterator iterator = cache.iterator();
+			while (iterator.hasNext()) {
+				BiomeCacheBlockNether block = (BiomeCacheBlockNether) iterator.next();
+				long var7 = var1 - block.lastAccessTime;
 				if (var7 > 30000L || var7 < 0L) {
-					cache.remove(var5--);
-					long var9 = var6.xPosition & 4294967295L | (var6.zPosition & 4294967295L) << 32;
+					iterator.remove();
+					long var9 = block.xPosition & 4294967295L | (block.zPosition & 4294967295L) << 32;
 					cacheMap.remove(var9);
 				}
 			}
