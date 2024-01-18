@@ -35,7 +35,7 @@ apply plugin: "com.github.johnrengelman.shadow"
 // SEMVER that gradle uses.
 group = "ganymedes01.etfuturum"
 archivesBaseName = "Et_Futurum_Requiem"
-def modVersion = "2.6.0fork6"
+def modVersion = "2.6.0fork8"
 version = project.hasProperty("useCommitHashInVersion") ? getCommitVersion(modVersion) : modVersion
 
 def buildAll = project.hasProperty("all")
