@@ -109,10 +109,8 @@ public class EtFuturumWorldGenerator implements IWorldGenerator {
 				generateOre(copperGen, world, rand, chunkX, chunkZ, 8, 4, 80);
 			}
 
-			if (ConfigWorld.enableExtraMesaGold) {
-				if (ArrayUtils.contains(BiomeDictionary.getTypesForBiome(world.getBiomeGenForCoords(chunkX << 4, chunkZ << 4)), Type.MESA)) {
+			if (ConfigWorld.enableExtraMesaGold && (ArrayUtils.contains(BiomeDictionary.getTypesForBiome(world.getBiomeGenForCoords(chunkX << 4, chunkZ << 4)), Type.MESA))) {
 					generateOre(mesaGoldGen, world, rand, chunkX, chunkZ, 20, 32, 80);
-				}
 			}
 
 			if (fossilGen != null && rand.nextInt(64) == 0 && ArrayUtils.contains(ConfigWorld.fossilDimensionBlacklist, world.provider.dimensionId) == ConfigWorld.fossilDimensionBlacklistAsWhitelist) {
@@ -123,8 +121,7 @@ public class EtFuturumWorldGenerator implements IWorldGenerator {
 				}
 			}
 
-			if (ConfigWorld.enableOceanMonuments && ModBlocks.PRISMARINE_BLOCK.isEnabled() && ModBlocks.SEA_LANTERN.isEnabled()) {
-				if (OceanMonument.canSpawnAt(world, chunkX, chunkZ)) {
+			if (ConfigWorld.enableOceanMonuments && ModBlocks.PRISMARINE_BLOCK.isEnabled() && ModBlocks.SEA_LANTERN.isEnabled() && (OceanMonument.canSpawnAt(world, chunkX, chunkZ))) {
 					x = (chunkX << 4) + rand.nextInt(16) + 8;
 					z = (chunkZ << 4) + rand.nextInt(16) + 8;
 					int y;
@@ -134,7 +131,6 @@ public class EtFuturumWorldGenerator implements IWorldGenerator {
 					int monumentCeiling = y - (1 + rand.nextInt(3));
 					OceanMonument.buildTemple(world, x, monumentCeiling - 22, z);
 					return;
-				}
 			}
 		}
 
@@ -161,11 +157,9 @@ public class EtFuturumWorldGenerator implements IWorldGenerator {
 			int y = world.getActualHeight();
 			int z = (chunkZ << 4) + rand.nextInt(16) + 8;
 			for (; y > 0; y--) {
-				if (!world.getBlock(x, y, z).isAir(world, x, y, z)) {
-					if (BlockChorusFlower.canPlantStay(world, x, y + 1, z)) {
+				if (!world.getBlock(x, y, z).isAir(world, x, y, z) && (BlockChorusFlower.canPlantStay(world, x, y + 1, z))) {
 						BlockChorusFlower.generatePlant(world, x, y + 1, z, rand, 8);
 						break;
-					}
 				}
 			}
 		}

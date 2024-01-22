@@ -6,7 +6,9 @@ import net.minecraft.util.Vec3;
 
 public class Vec3i implements Comparable<Vec3i> {
 
-	private final int x, y, z;
+	private final int x;
+	private final int y;
+	private final int z;
 
 	public Vec3i(int xIn, int yIn, int zIn) {
 		x = xIn;
@@ -82,16 +84,16 @@ public class Vec3i implements Comparable<Vec3i> {
 
 	public double getSquaredDistance(double x, double y, double z, boolean treatAsBlockPos) {
 		double d = treatAsBlockPos ? 0.5D : 0.0D;
-		double e = (double) this.getX() + d - x;
-		double f = (double) this.getY() + d - y;
-		double g = (double) this.getZ() + d - z;
+		double e = this.getX() + d - x;
+		double f = this.getY() + d - y;
+		double g = this.getZ() + d - z;
 		return e * e + f * f + g * g;
 	}
 
 	public int manhattanDistance(Vec3i p_218139_1_) {
-		float f = (float) Math.abs(p_218139_1_.getX() - this.getX());
-		float f1 = (float) Math.abs(p_218139_1_.getY() - this.getY());
-		float f2 = (float) Math.abs(p_218139_1_.getZ() - this.getZ());
+		float f = Math.abs(p_218139_1_.getX() - this.getX());
+		float f1 = Math.abs(p_218139_1_.getY() - this.getY());
+		float f2 = Math.abs(p_218139_1_.getZ() - this.getZ());
 		return (int) (f + f1 + f2);
 	}
 

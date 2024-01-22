@@ -9,12 +9,13 @@ import ganymedes01.etfuturum.core.utils.helpers.BlockPos;
 import ganymedes01.etfuturum.core.utils.helpers.DoublePerlinNoiseSampler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -80,15 +81,8 @@ public class WorldGenAmethystGeode extends WorldGenerator {
 	 * Note: Original variable locations are left as comments above the respective variable to make it easier to backtrack through the vanilla 1.17 code.
 	 * Some of them use a number provider to do .get to get a number in the range. If this would get two numbers I used nextBoolean() instead to be faster.
 	 */
+
 	public boolean generate(World world, Random random, int x, int y, int z) {
-		int chunkX = x >> 4;
-		int chunkZ = z >> 4;
-
-		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
-
-		if(!chunk.isChunkLoaded) {
-			return false;
-		}
 		BlockPos blockPos = new BlockPos(x, y, z);
 		List<Pair<BlockPos, Integer>> list = Lists.newLinkedList();
 		int distPoint = getRandom(distributionPoints, random);
@@ -100,7 +94,7 @@ public class WorldGenAmethystGeode extends WorldGenerator {
 		double middleLayerSqrt = 1.0D / Math.sqrt(middleLayer + outerWallMaxDiv);
 		double outerLayerSqrt = 1.0D / Math.sqrt(outerLayer + outerWallMaxDiv);
 		double l = 1.0D / Math.sqrt(baseCrackSize + random.nextDouble() / 2.0D + (distPoint > 3 ? outerWallMaxDiv : 0.0D));
-		boolean bl = (double) random.nextFloat() < generateCrackChance;
+		boolean bl = random.nextFloat() < generateCrackChance;
 		int m = 0;
 
 		int r;
@@ -190,33 +184,68 @@ public class WorldGenAmethystGeode extends WorldGenerator {
 				} //Almost deleted this code for being unused, but the variable in the for loop is vital to later parts of the code.
 			} while (u < outerLayerSqrt);
 
-			if (world.getBlock(blockPos3.getX(), blockPos3.getY(), blockPos3.getZ()).getBlockHardness(world, blockPos3.getX(), blockPos3.getY(), blockPos3.getZ()) != -1) {
-				if (bl && v >= l && u < fillingSqrt) {
-					world.setBlockToAir(blockPos3.getX(), blockPos3.getY(), blockPos3.getZ());
-				} else if (u >= fillingSqrt) {
-					world.setBlockToAir(blockPos3.getX(), blockPos3.getY(), blockPos3.getZ());//FillingProvider
-					//Fun fact, comment out this line for some really odd shapes lol
-				} else if (u >= innerLayerSqrt) {
-					boolean bl2 = (double) random.nextFloat() < this.buddingAmethystChance;
-					if (bl2) {
-						world.setBlock(blockPos3.getX(), blockPos3.getY(), blockPos3.getZ(), ModBlocks.BUDDING_AMETHYST.get());//AlternateInnerLayerProvider
-					} else {
-						world.setBlock(blockPos3.getX(), blockPos3.getY(), blockPos3.getZ(), ModBlocks.AMETHYST_BLOCK.get());//InnerLayerProvider
-					}
+			List<BlockPos> positionsToChange = new ArrayList<>();
 
-					//This boolean is always true and !true == false
-					if ((/* !geodeFeatureConfig.placementsRequireLayer0Alternate || */bl2) && (double) random.nextFloat() < usePotentialPlacementsChance) {
-						list3.add(new BlockPos(blockPos3));
+			for (int yLevel = blockPos3.getY(); yLevel >= 0; yLevel--) {
+				BlockPos voxelBlockPos = new BlockPos(blockPos3.getX(), yLevel, blockPos3.getZ());
+				if (!world.blockExists(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ())) {
+					return false;
+				}
+				if (world.getBlock(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ()).getBlockHardness(world, voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ()) != -1) {
+					positionsToChange.add(voxelBlockPos);
+					break;
+				}
+			}
+
+			for (BlockPos voxelBlockPos : positionsToChange) {
+				double t = doublePerlinNoiseSampler.sample(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ()) * noiseMultiplier;
+				u = 0.0D;
+				v = 0.0D;
+
+				for (Pair<BlockPos, Integer> pair : list) {
+					u += Utils.fastInverseSqrt(voxelBlockPos.getSquaredDistance(pair.getLeft()) + (double) pair.getRight()) + t;
+				}
+
+				for (BlockPos blockPos4 : list2) {
+					v += Utils.fastInverseSqrt(voxelBlockPos.getSquaredDistance(blockPos4) + (double) crackPointOffset) + t;
+				}
+
+				if (u >= outerLayerSqrt) {
+					if (bl && v >= l && u < fillingSqrt) {
+						if (world.getBlock(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ()) != Blocks.air) {
+							world.setBlockToAir(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ());
+						}
+					} else if (u >= fillingSqrt) {
+						if (world.getBlock(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ()) != Blocks.air) {
+							world.setBlockToAir(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ());
+						}
+						// FillingProvider
+						// Fun fact, comment out this line for some really odd shapes lol
+					} else if (u >= innerLayerSqrt) {
+						boolean bl2 = random.nextFloat() < this.buddingAmethystChance;
+						if (bl2) {
+							world.setBlock(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ(), ModBlocks.BUDDING_AMETHYST.get(),0,3);
+							// AlternateInnerLayerProvider
+						} else {
+							world.setBlock(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ(), ModBlocks.AMETHYST_BLOCK.get(),0,3);
+							// InnerLayerProvider
+						}
+
+						// This boolean is always true and !true == false
+						if ((/* !geodeFeatureConfig.placementsRequireLayer0Alternate || */bl2) && random.nextFloat() < usePotentialPlacementsChance) {
+							list3.add(new BlockPos(voxelBlockPos));
+						}
+					} else if (u >= middleLayerSqrt) {
+						world.setBlock(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ(), middleBlock.getObject(), middleBlock.getMeta(), 2);
+						// MiddleLayerProvider also TODO I need to make this layer configurable
+					} else if (u >= outerLayerSqrt) {
+						world.setBlock(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ(), outerBlock.getObject(), outerBlock.getMeta(), 2);
+						// OuterLayerProvider
 					}
-				} else if (u >= middleLayerSqrt) {
-					world.setBlock(blockPos3.getX(), blockPos3.getY(), blockPos3.getZ(), middleBlock.getObject(), middleBlock.getMeta(), 2);//MiddleLayerProvider also TODO I need to make this layer configurable
-				} else if (u >= outerLayerSqrt) {
-					world.setBlock(blockPos3.getX(), blockPos3.getY(), blockPos3.getZ(), outerBlock.getObject(), outerBlock.getMeta(), 2);//OuterLayerProvider
 				}
 			}
 		}
 	}
-
 	/*
 	 * Temporary until I can figure out how to do <T> for array[]s and I'll move this to Utils.
 	 */

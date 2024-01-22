@@ -5,6 +5,7 @@ import ganymedes01.etfuturum.core.utils.helpers.BlockPos;
 import ganymedes01.etfuturum.core.utils.structurenbt.EFRBlockStateConverter;
 import ganymedes01.etfuturum.core.utils.structurenbt.NBTStructure;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
@@ -41,11 +42,9 @@ public class WorldGenNetherFossil extends WorldGenFossil {
 		if (!validCorner(world, x, y, z + corners.getZ())) {
 			air++;
 		}
-		if (!validCorner(world, x + corners.getX(), y, z + corners.getZ())) {
-			if (air++ >= 3) return false;
+		if (!validCorner(world, x + corners.getX(), y, z + corners.getZ()) && (air++ >= 3)) {return false;
 		}
-		if (!validCorner(world, x + (corners.getX() >> 1), y, z + (corners.getZ() >> 1))) {
-			if (air++ >= 3) return false;
+		if (!validCorner(world, x + (corners.getX() >> 1), y, z + (corners.getZ() >> 1)) && (air++ >= 3)) {return false;
 		}
 		return air <= 3;
 	}
