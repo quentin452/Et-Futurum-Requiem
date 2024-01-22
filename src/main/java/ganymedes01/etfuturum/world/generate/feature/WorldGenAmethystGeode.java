@@ -40,6 +40,27 @@ public class WorldGenAmethystGeode extends WorldGenerator {
 	private final RegistryMapping<Block> outerBlock;
 	private final RegistryMapping<Block> middleBlock;
 
+	List<BlockPos> list3;
+
+	BlockPos blockPos;
+
+	DoublePerlinNoiseSampler doublePerlinNoiseSampler;
+
+	double outerWallMaxDiv;
+	double fillingSqrt = 1.0D;
+	double innerLayerSqrt = 1.0D;
+	double middleLayerSqrt = 1.0D;
+	double outerLayerSqrt = 1.0D;
+	double l = 1.0D;
+
+	BlockPos blockPos6;
+	Block block2;
+
+	List<Pair<BlockPos, Integer>> list;
+	List<BlockPos> list2;
+
+	boolean bl;
+
 	public WorldGenAmethystGeode(RegistryMapping<Block> outerBlock, RegistryMapping<Block> middleBlock) {
 		this(-16, 16, 1, new int[]{3, 4}, new int[]{4, 5, 6}, 1.7D, 2.2D, 3.2D, 4.2D, new int[]{1, 2}, 0.95D, 2.0D, 2, 0.05D, 0.083D, 0.35D, outerBlock, middleBlock);
 	}
@@ -83,24 +104,22 @@ public class WorldGenAmethystGeode extends WorldGenerator {
 	 */
 
 	public boolean generate(World world, Random random, int x, int y, int z) {
-		BlockPos blockPos = new BlockPos(x, y, z);
-		List<Pair<BlockPos, Integer>> list = Lists.newLinkedList();
+		blockPos = new BlockPos(x, y, z);
+		list = Lists.newLinkedList();
 		int distPoint = getRandom(distributionPoints, random);
-		DoublePerlinNoiseSampler doublePerlinNoiseSampler = DoublePerlinNoiseSampler.create(random, -4, 1.0D);//Somehow this was (double[])(1.0D) which doesn't make sense. Decompiler weirdism?
-		List<BlockPos> list2 = Lists.newLinkedList();
-		double outerWallMaxDiv = (double) distPoint / (double) outerWallDistance[outerWallDistance.length - 1];
-		double fillingSqrt = 1.0D / Math.sqrt(filling);
-		double innerLayerSqrt = 1.0D / Math.sqrt(innerLayer + outerWallMaxDiv);
-		double middleLayerSqrt = 1.0D / Math.sqrt(middleLayer + outerWallMaxDiv);
-		double outerLayerSqrt = 1.0D / Math.sqrt(outerLayer + outerWallMaxDiv);
-		double l = 1.0D / Math.sqrt(baseCrackSize + random.nextDouble() / 2.0D + (distPoint > 3 ? outerWallMaxDiv : 0.0D));
-		boolean bl = random.nextFloat() < generateCrackChance;
+		doublePerlinNoiseSampler = DoublePerlinNoiseSampler.create(random, -4, 1.0D);//Somehow this was (double[])(1.0D) which doesn't make sense. Decompiler weirdism?
+		list2 = Lists.newLinkedList();
+		outerWallMaxDiv = (double) distPoint / (double) outerWallDistance[outerWallDistance.length - 1];
+		fillingSqrt = 1.0D / Math.sqrt(filling);
+		innerLayerSqrt = 1.0D / Math.sqrt(innerLayer + outerWallMaxDiv);
+		middleLayerSqrt = 1.0D / Math.sqrt(middleLayer + outerWallMaxDiv);
+		outerLayerSqrt = 1.0D / Math.sqrt(outerLayer + outerWallMaxDiv);
+		l = 1.0D / Math.sqrt(baseCrackSize + random.nextDouble() / 2.0D + (distPoint > 3 ? outerWallMaxDiv : 0.0D));
+		bl = random.nextFloat() < generateCrackChance;
 		int m = 0;
 
 		int r;
 		int s;
-		BlockPos blockPos6;
-		Block block2;
 		for (r = 0; r < distPoint; ++r) {
 			s = getRandom(outerWallDistance, random);
 			int p = getRandom(outerWallDistance, random);
@@ -138,7 +157,12 @@ public class WorldGenAmethystGeode extends WorldGenerator {
 			}
 		}
 
-		List<BlockPos> list3 = Lists.newArrayList();
+		list3 = Lists.newArrayList();
+		generateSubOne(world, random);
+		return true;
+	}
+
+	public void generateSubOne(World world, Random random) {
 		Iterator<BlockPos> var48 = BlockPos.iterate(blockPos.add(minGenOffset, minGenOffset, minGenOffset), blockPos.add(maxGenOffset, maxGenOffset, maxGenOffset)).iterator();
 
 		while (true) {
@@ -163,7 +187,7 @@ public class WorldGenAmethystGeode extends WorldGenerator {
 						}
 					}
 
-					return true;
+					return;
 				}
 
 				blockPos3 = var48.next();
@@ -189,7 +213,7 @@ public class WorldGenAmethystGeode extends WorldGenerator {
 			for (int yLevel = blockPos3.getY(); yLevel >= 0; yLevel--) {
 				BlockPos voxelBlockPos = new BlockPos(blockPos3.getX(), yLevel, blockPos3.getZ());
 				if (!world.blockExists(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ())) {
-					return false;
+					return;
 				}
 				if (world.getBlock(voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ()).getBlockHardness(world, voxelBlockPos.getX(), voxelBlockPos.getY(), voxelBlockPos.getZ()) != -1) {
 					positionsToChange.add(voxelBlockPos);
