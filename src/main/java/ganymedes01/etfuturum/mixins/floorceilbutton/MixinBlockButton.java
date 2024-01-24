@@ -105,7 +105,7 @@ public class MixinBlockButton extends Block {
 	}
 
 	@Overwrite
-	private int func_150045_e(World p_150045_1_, int p_150045_2_, int p_150045_3_, int p_150045_4_) {
+	public int func_150045_e(World p_150045_1_, int p_150045_2_, int p_150045_3_, int p_150045_4_) {
 		if (p_150045_1_.isSideSolid(p_150045_2_ - 1, p_150045_3_, p_150045_4_, EAST)) return 1;
 		if (p_150045_1_.isSideSolid(p_150045_2_ + 1, p_150045_3_, p_150045_4_, WEST)) return 2;
 		if (p_150045_1_.isSideSolid(p_150045_2_, p_150045_3_, p_150045_4_ - 1, SOUTH)) return 3;
@@ -154,7 +154,7 @@ public class MixinBlockButton extends Block {
 	 * @param p_150043_1_
 	 */
 	@Overwrite
-	private void func_150043_b(int p_150043_1_) {
+	public void func_150043_b(int p_150043_1_) {
 		int j = p_150043_1_ & 7;
 		boolean flag = (p_150043_1_ & 8) > 0;
 		float f = 0.375F;
@@ -182,7 +182,7 @@ public class MixinBlockButton extends Block {
 	}
 
 	@Overwrite
-	private void func_150042_a(World p_150042_1_, int p_150042_2_, int p_150042_3_, int p_150042_4_, int p_150042_5_) {
+	public void func_150042_a(World p_150042_1_, int p_150042_2_, int p_150042_3_, int p_150042_4_, int p_150042_5_) {
 		p_150042_1_.notifyBlocksOfNeighborChange(p_150042_2_, p_150042_3_, p_150042_4_, this);
 
 		if (p_150042_5_ == 1) {
